@@ -50,6 +50,7 @@ function FuncComponent() {
     createSearchParamUpdater(setSearchParams),
     [setSearchParams],
   );
+
   const selectedTaskId
     = searchParams.get(TyTask.SearchParams.ID);
   const itemsPerPage
@@ -59,39 +60,69 @@ function FuncComponent() {
 
   const isTodosLoading
     = todosStatus === TyTodo.Status.LOADING;
-  // const totalPages
-  //   = Math.ceil(totalItems / itemsPerPage);
 
-  const addTodo = (newTodo: TyTodo.CreationAttributes) => {
-    return dispatch(todosSlice.createThunk(newTodo))
-      .then<TyTodo.Item>((response) => (
-        response.payload as AxiosResponse<TyTodo.Item>).data);
-  };
+  const refetchTodos = React.useCallback(
+    (selectedTaskId: TyTodo.Request.GetAll['taskId'],
+      currentPage: TyTodo.Request.GetAll['page'],
+      itemsPerPage: TyTodo.Request.GetAll['size'],
+    ) => {
+      dispatch(todosSlice.reset());
+
+      return dispatch(todosSlice.getAllThunk({
+        taskId: selectedTaskId || '',
+        page: currentPage,
+        size: itemsPerPage,
+      })).then((action) => {
+        if (todosSlice.getAllThunk.fulfilled.match(action)) {
+          setTotalItems(action.payload.total);
+        }
+      });
+    }, [dispatch]);
+
+  // useRef
+  const refetchTodosRef = React.useRef(refetchTodos);
+  const updateSearchParamsRef = React.useRef(updateSearchParams);
+  const searchParamsRef = React.useRef(searchParams);
+
+  const addTodo = React.useCallback(
+    (newTodo: TyTodo.CreationAttributes) => {
+      return dispatch(todosSlice.createThunk(newTodo))
+        .then<TyTodo.Item>((response) => (
+          response.payload as AxiosResponse<TyTodo.Item>).data);
+    }, [dispatch]);
 
   const deleteTodo = React.useCallback(
-    async (todo: TyTodo.Item) => {
+    (todo: TyTodo.Item) => {
       setProcessings(prev => [...prev, todo.id]);
 
       return dispatch(todosSlice.removeThunk(todo.id))
-        .finally(() => setProcessings(prev =>
-          prev.filter(item => item !== todo.id)));
+        .finally(() => {
+          setProcessings(prev => prev.filter(item => item !== todo.id));
+        });
     }, [dispatch]);
 
   const updateTodo = React.useCallback(
-    async (updatedTodo: TyTodo.Item) => {
+    (updatedTodo: TyTodo.Item) => {
       setProcessings(prev => [...prev, updatedTodo.id]);
 
       return dispatch(todosSlice.updateThunk(updatedTodo))
-        .finally(() => setProcessings(prev =>
-          prev.filter(item => item !== updatedTodo.id)));
+        .finally(() => {
+          setProcessings(prev => prev.filter(item => item !== updatedTodo.id));
+        });
     }, [dispatch]);
 
 
+  // use useRef to store and persist the objects without causing unnecessary re-renders
+  React.useEffect(() => {
+    refetchTodosRef.current = refetchTodos;
+    updateSearchParamsRef.current = updateSearchParams;
+    searchParamsRef.current = searchParams;
+  }, [refetchTodos, updateSearchParams, searchParams]);
 
   // if URL without id, select null task and reset todos
   React.useEffect(() => {
     if (!selectedTaskId) {
-      updateSearchParams(searchParams, {
+      updateSearchParamsRef.current(searchParamsRef.current, {
         [TyTask.SearchParams.ID]: null,
         [TyTask.SearchParams.PAGE]: null,
         [TyTask.SearchParams.ITEM_PER_PAGE]: null,
@@ -100,12 +131,12 @@ function FuncComponent() {
       dispatch(todosSlice.reset());
       setTotalItems(0);
     }
-  }, [searchParams, selectedTaskId, updateSearchParams, dispatch]);
+  }, [selectedTaskId, dispatch]);
 
   // defualt pagable sets and first request
   React.useEffect(() => {
     if (selectedTaskId) {
-      updateSearchParams(searchParams, {
+      updateSearchParamsRef.current(searchParamsRef.current, {
         [TyTask.SearchParams.PAGE]: defualtPage,
         [TyTask.SearchParams.ITEM_PER_PAGE]: String(optionsPerPage[0]),
       });
@@ -115,22 +146,15 @@ function FuncComponent() {
   // tracking changes in search parameters
   React.useEffect(() => {
     if (selectedTaskId) {
-      dispatch(todosSlice.getAllThunk({
-        taskId: selectedTaskId || '',
-        page: currentPage,
-        size: itemsPerPage,
-      })).then((action) => {
-        if (todosSlice.getAllThunk.fulfilled.match(action)) {
-          setTotalItems(action.payload.total);
-        }
-      });
+      refetchTodosRef.current(selectedTaskId, currentPage, itemsPerPage);
     }
-  }, [selectedTaskId, currentPage, itemsPerPage, dispatch]);
+  }, [selectedTaskId, currentPage, itemsPerPage]);
 
-  if (env.DEV_MODE) console.info(`
+  if (env.DEV_MODE && 1) console.info(`
     selectedTaskId = ${selectedTaskId}
     totalItems = ${totalItems}
     itemsPerPage = ${itemsPerPage}
+    todos.length = ${todos.length}
     `);
 
   return (
@@ -148,7 +172,74 @@ function FuncComponent() {
           onTodoCreate={addTodo}
         />
 
-        {isTodosLoading && (
+        {/* while todos are loading, totalItems is '0' or itemsPerPage is '0', totalPages, as derivative, is 'Infinity' or 'NaN'*/}
+        {(!!totalItems && !!itemsPerPage) && (
+          <div
+            className="p-4 
+          flex flex-col sm:flex-row items-center justify-between gap-4
+        bg-gray-700 rounded-md shadow-md"
+          >
+            <ItemsPerPage
+              selected={itemsPerPage}
+              options={optionsPerPage}
+              handlersFor={{
+                select: {
+                  onChange: (event: TyEvt.Change.SelectElmt) => {
+                    updateSearchParams(searchParams, {
+                      [TyTask.SearchParams.ITEM_PER_PAGE]: event.target.value,
+                      [TyTask.SearchParams.PAGE]: defualtPage,
+                    })
+                  }
+                }
+              }}
+            />
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(totalItems / itemsPerPage)}
+              handlersFor={{
+                btnPrev: {
+                  onClick: () => updateSearchParams(searchParams, {
+                    [TyTask.SearchParams.PAGE]: String(currentPage - 1),
+                  })
+                },
+                btnPage: {
+                  onClick: (event) => {
+                    updateSearchParams(searchParams, {
+                      [TyTask.SearchParams.PAGE]:
+                        (event.target as HTMLButtonElement).dataset.page || null,
+                    })
+                  }
+                },
+                btnNext: {
+                  onClick: () => updateSearchParams(searchParams, {
+                    [TyTask.SearchParams.PAGE]: String(currentPage + 1),
+                  })
+                },
+              }}
+            />
+          </div>
+        )}
+
+        {(todos.length !== 0) && (
+          <div
+            data-cy="TodoList"
+            className="max-h-80 sm:max-h-96
+            overflow-y-scroll no-scrollbar"
+          >
+            {todos.map((todo) => (
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                onDelete={deleteTodo}
+                onUpdate={updateTodo}
+                isProcessed={processings.includes(todo.id)}
+              />
+            ))}
+          </div>
+        )}
+
+        {(selectedTaskId && isTodosLoading && !!todos.length) && (
           <Loader
             style={{
               container: `flex items-center justify-center`,
@@ -163,72 +254,6 @@ function FuncComponent() {
           </Loader>
         )}
 
-        {/* while todos are loading, totalItems is '0' or itemsPerPage is '0', totalPages, as derivative, is 'Infinity' or 'NaN'*/}
-        {(!isTodosLoading && !!totalItems && !!itemsPerPage) && (
-          <>
-            <div
-              className="p-4 
-          flex flex-col sm:flex-row items-center justify-between gap-4
-        bg-gray-700 rounded-md shadow-md"
-            >
-              <ItemsPerPage
-                selected={itemsPerPage}
-                options={optionsPerPage}
-                handlersFor={{
-                  select: {
-                    onChange: (event: TyEvt.Change.SelectElmt) => {
-                      updateSearchParams(searchParams, {
-                        [TyTask.SearchParams.ITEM_PER_PAGE]: event.target.value,
-                        [TyTask.SearchParams.PAGE]: defualtPage,
-                      })
-                    }
-                  }
-                }}
-              />
-
-              <Pagination
-                currentPage={currentPage}
-                totalPages={Math.ceil(totalItems / itemsPerPage)}
-                handlersFor={{
-                  btnPrev: {
-                    onClick: () => updateSearchParams(searchParams, {
-                      [TyTask.SearchParams.PAGE]: String(currentPage - 1),
-                    })
-                  },
-                  btnPage: {
-                    onClick: (event) => {
-                      updateSearchParams(searchParams, {
-                        [TyTask.SearchParams.PAGE]:
-                          (event.target as HTMLButtonElement).dataset.page || null,
-                      })
-                    }
-                  },
-                  btnNext: {
-                    onClick: () => updateSearchParams(searchParams, {
-                      [TyTask.SearchParams.PAGE]: String(currentPage + 1),
-                    })
-                  },
-                }}
-              />
-            </div>
-
-            <div
-              data-cy="TodoList"
-              className="max-h-80 sm:max-h-96
-            overflow-y-scroll no-scrollbar"
-            >
-              {todos.map((todo) => (
-                <TodoItem
-                  key={todo.id}
-                  todo={todo}
-                  onDelete={deleteTodo}
-                  onUpdate={updateTodo}
-                  isProcessed={processings.includes(todo.id)}
-                />
-              ))}
-            </div>
-          </>
-        )}
       </div>
     </div>
   );

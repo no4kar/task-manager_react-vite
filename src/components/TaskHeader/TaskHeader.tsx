@@ -114,43 +114,44 @@ function FuncComponent({
         dispatch(tasksSlice.removeThunk(taskId));
       }, []);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const trimedTitle = title.trim();
+  const handleSubmit
+    = (event: React.FormEvent) => {
+      event.preventDefault();
+      const trimedTitle = title.trim();
 
-    if (trimedTitle === '') {
-      onTodoError(TyTodo.Error.EMPTY_TITLE);
-      return;
-    }
-
-    if (titleInput.current?.disabled) {
-      return;
-    }
-
-    if (titleInput.current) {
-      titleInput.current.disabled = true;
-    }
-
-    if (!author
-      || !selectedTask) {
-      onTodoError(TyTodo.Error.UNABLE_ADD);
-      return;
-    }
-
-    onTodoCreate({
-      userId: author.id,
-      taskId: selectedTask.id,
-      title: trimedTitle,
-      completed: false,
-    }).finally(() => {
-      if (titleInput.current) {
-        titleInput.current.disabled = false;
-        titleInput.current.focus();
+      if (trimedTitle === '') {
+        onTodoError(TyTodo.Error.EMPTY_TITLE);
+        return;
       }
 
-      setTitle('');
-    });
-  };
+      if (titleInput.current?.disabled) {
+        return;
+      }
+
+      if (titleInput.current) {
+        titleInput.current.disabled = true;
+      }
+
+      if (!author
+        || !selectedTask) {
+        onTodoError(TyTodo.Error.UNABLE_ADD);
+        return;
+      }
+
+      onTodoCreate({
+        userId: author.id,
+        taskId: selectedTask.id,
+        title: trimedTitle,
+        completed: false,
+      }).finally(() => {
+        if (titleInput.current) {
+          titleInput.current.disabled = false;
+          titleInput.current.focus();
+        }
+
+        setTitle('');
+      });
+    };
 
   React.useEffect(() => {
     if (titleInput.current) {

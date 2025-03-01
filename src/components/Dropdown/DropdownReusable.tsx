@@ -98,7 +98,7 @@ function FuncComponent({
       })}
     >
       <Lable
-        title={isProcessing ? 'Processing...' : lableTitle}
+        title={isProcessing ? 'Processing...' : title}
         isOpen={isOpen}
         isProcessing={isProcessing}
         isEditing={isEditing}
@@ -108,7 +108,7 @@ function FuncComponent({
           },
           input: {
             onChange: (event: TyEvt.Change.InputElmt) => {
-              setTitle(event.target.value)
+              setTitle(event.target.value);
             },
             onKeyDown: (event: TyEvt.Keybr.InputElmt) => {
               if (event.key === 'Enter') {
