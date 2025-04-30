@@ -25,7 +25,7 @@ export function wait(delay: number) {
  * @returns {string} The truncated string with the fill string appended if truncation occurs.
  */
 export function truncateString(
-  str: string,
+  str: string = '',
   maxLength: number,
   fillString: string = '',
 ): string {

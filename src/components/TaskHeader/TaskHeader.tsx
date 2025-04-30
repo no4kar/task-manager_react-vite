@@ -78,11 +78,11 @@ function FuncComponent({
     = React.useCallback(
       ({ name }: { name: TyTask.Item['name'] }) => {
         if (author) {
-          dispatch(tasksSlice.createThunk({
+          dispatch(tasksSlice.asyncThunk.create({
             name,
             userId: author.id,
           })).then((action) => {
-            if (tasksSlice.createThunk.fulfilled.match(action)) {
+            if (tasksSlice.asyncThunk.create.fulfilled.match(action)) {
               updateSearchParams(searchParams, {
                 [TyTask.SearchParams.ID]: action.payload.id,
               });
@@ -95,11 +95,11 @@ function FuncComponent({
     = React.useCallback(
       ({ name }: { name: TyTask.Item['name'] }) => {
         if (selectedTask) {
-          dispatch(tasksSlice.updateThunk({
+          dispatch(tasksSlice.asyncThunk.update({
             ...selectedTask,
             name,
           })).then((action) => {
-            if (tasksSlice.updateThunk.fulfilled.match(action)) {
+            if (tasksSlice.asyncThunk.update.fulfilled.match(action)) {
               updateSearchParams(searchParams, {
                 [TyTask.SearchParams.ID]: action.payload.id,
               });
@@ -111,7 +111,7 @@ function FuncComponent({
   const handleRemoveTask
     = React.useCallback(
       (taskId: TyTask.Item['id']) => {
-        dispatch(tasksSlice.removeThunk(taskId));
+        dispatch(tasksSlice.asyncThunk.remove(taskId));
       }, []);
 
   const handleSubmit
@@ -161,7 +161,7 @@ function FuncComponent({
 
   React.useEffect(() => {
     if (author) {
-      dispatch(tasksSlice.getAllThunk({
+      dispatch(tasksSlice.asyncThunk.getAll({
         userId: author.id,
       }));
     }

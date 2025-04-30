@@ -60,7 +60,7 @@ function FuncComponent() {
             <button className='w-fit p-2 
           bg-red-400 text-white rounded hover:opacity-70'
               onClick={() => {
-                dispatch(authSlice.logoutThunk())
+                dispatch(authSlice.asyncThunk.logout())
                   .then(() => {
                     dispatch(tasksSlice.reset());
                     dispatch(todosSlice.reset());

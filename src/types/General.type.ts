@@ -1,4 +1,5 @@
 import React from 'react';
+import { AsyncThunk } from '@reduxjs/toolkit';
 
 /* eslint @typescript-eslint/no-namespace: 'off' */
 export namespace TyGeneral {
@@ -6,7 +7,7 @@ export namespace TyGeneral {
     /** The total number of items found based on the search parameters. */
     total: number,
     /** An array of items of type T, representing the current page's data. */
-    content: T[],
+    content: Array<T>,
     /** The maximum number of items that can be included on one page. */
     limit: number,
     /** The starting position or index of the current page's data in the overall dataset. */
@@ -19,4 +20,8 @@ export namespace TyGeneral {
 
   export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
   export type UseState<T> = (initSt: T | (() => T)) => [T, SetState<T>];
+
+  
+  export type ApiAsyncThunk<Res, Req>
+    = AsyncThunk<Res, Req, Record<string, never>>;
 }

@@ -1,19 +1,34 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useReduxSelector } from '../../store/hooks';
+import {
+  useReduxDispatch,
+  useReduxSelector,
+} from '../../store/hooks';
 import { selectFromStore } from '../../store/store';
-
+import * as authSlice from '../../slices/auth.slice';
 import { Loader } from '../Loader';
 import { TyAuth } from '../../types/Auth.type';
 
-export const RequireAuth = React.memo(FuncComponent);
+export const RequireAuth
+  = React.memo(FuncComponent);
 
 function FuncComponent() {
+  // RRD
+  const location = useLocation();
+
+  // Redux
   const {
     author,
     status: authStatus,
   } = useReduxSelector(selectFromStore('author'));
-  const location = useLocation();
+  const dispatch = useReduxDispatch();
+
+  React.useEffect(() => {
+    if (!author) {
+      // check auth
+      dispatch(authSlice.asyncThunk.refresh());
+    }
+  }, []);
 
   if (authStatus === TyAuth.Status.LOADING) {
     return <Loader

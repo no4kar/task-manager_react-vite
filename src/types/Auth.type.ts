@@ -9,23 +9,29 @@ export namespace TyAuth {
 
   export namespace Request {
     export type Login = CreationAttributes;
-    export type Activation = { activationToken: string };
+    export type Logout = void;
+    export type Activation = string; // activationToken
     export type Registration = CreationAttributes;
+    export type Refresh = void;
   }
 
   export namespace Response {
     export type Login = {
       user: Item,
-      accessToken: string
+      accessToken: string,
     };
+    export type Logout = void;
     export type Activation = {
       user: Item,
-      accessToken: string
+      accessToken: string,
     };
-    export type Registration = { message: string, error: any, };
+    export type Registration = {
+      message: string,
+      error: unknown,
+    };
     export type Refresh = {
       user: Item,
-      accessToken: string
+      accessToken: string,
     };
   }
 
