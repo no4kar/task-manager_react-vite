@@ -24,7 +24,7 @@ function FuncComponent() {
   const dispatch = useReduxDispatch();
 
   React.useEffect(() => {
-    dispatch(authSlice.activationThunk(activationToken));
+    dispatch(authSlice.asyncThunk.activation(activationToken));
   }, []);
 
   let content: JSX.Element = (

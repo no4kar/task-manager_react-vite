@@ -1,9 +1,9 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-import * as authSlice from './slices/auth.slice';
-// import * as todosSlice from './slices/todos.slice';
-import { useReduxDispatch, useReduxSelector } from './store/hooks';
+import {
+  useReduxSelector,
+} from './store/hooks';
 import { selectFromStore } from './store/store';
 
 import { PageHeader } from './components/PageHeader';
@@ -12,7 +12,9 @@ import { Notification } from './components/Notification';
 import './App.scss';
 import { TyAuth } from './types/Auth.type';
 import { TyTodo } from './types/Todo.type';
-export const App = React.memo(FuncComponent);
+
+export const App
+  = FuncComponent; // dont needs the React.memo. it will be rerendering each time
 
 function FuncComponent() {
   const {
@@ -23,14 +25,8 @@ function FuncComponent() {
     errorMsg: todosErrorMsg,
     status: todosStatus,
   } = useReduxSelector(selectFromStore('todos'));
-  const dispatch = useReduxDispatch();
   const [messages, setMessages]
     = React.useState<{ date: number, content: string }[]>([]);
-
-  React.useEffect(() => {
-    // check auth
-    dispatch(authSlice.refreshThunk());
-  }, []);
 
   React.useEffect(() => {
     if (authStatus === TyAuth.Status.ERROR) {

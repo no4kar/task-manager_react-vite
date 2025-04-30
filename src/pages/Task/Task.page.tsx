@@ -68,12 +68,12 @@ function FuncComponent() {
     ) => {
       dispatch(todosSlice.reset());
 
-      return dispatch(todosSlice.getAllThunk({
+      return dispatch(todosSlice.asyncThunk.getAll({
         taskId: selectedTaskId || '',
         page: currentPage,
         size: itemsPerPage,
       })).then((action) => {
-        if (todosSlice.getAllThunk.fulfilled.match(action)) {
+        if (todosSlice.asyncThunk.getAll.fulfilled.match(action)) {
           setTotalItems(action.payload.total);
         }
       });
@@ -86,7 +86,7 @@ function FuncComponent() {
 
   const addTodo = React.useCallback(
     (newTodo: TyTodo.CreationAttributes) => {
-      return dispatch(todosSlice.createThunk(newTodo))
+      return dispatch(todosSlice.asyncThunk.create(newTodo))
         .then<TyTodo.Item>((response) => (
           response.payload as AxiosResponse<TyTodo.Item>).data);
     }, [dispatch]);
@@ -95,7 +95,7 @@ function FuncComponent() {
     (todo: TyTodo.Item) => {
       setProcessings(prev => [...prev, todo.id]);
 
-      return dispatch(todosSlice.removeThunk(todo.id))
+      return dispatch(todosSlice.asyncThunk.remove(todo.id))
         .finally(() => {
           setProcessings(prev => prev.filter(item => item !== todo.id));
         });
@@ -105,7 +105,7 @@ function FuncComponent() {
     (updatedTodo: TyTodo.Item) => {
       setProcessings(prev => [...prev, updatedTodo.id]);
 
-      return dispatch(todosSlice.updateThunk(updatedTodo))
+      return dispatch(todosSlice.asyncThunk.update(updatedTodo))
         .finally(() => {
           setProcessings(prev => prev.filter(item => item !== updatedTodo.id));
         });

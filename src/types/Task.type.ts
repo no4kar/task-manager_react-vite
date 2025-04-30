@@ -14,19 +14,21 @@ export namespace TyTask {
   export type CreationAttributes = Omit<Item, 'id' | 'createdAt' | 'updatedAt'>;
 
   export namespace Request {
+    export type Create = TyTask.CreationAttributes;
     export interface GetAll extends Partial<Omit<Item, 'id' | 'userId'>> {
       userId: Item['userId'],
       page?: number,
       size?: number,
     }
     export type Update = Item;
-    export type Create = TyTask.CreationAttributes;
+    export type Remove = Item['id'];
   }
 
   export namespace Response {
+    export type Create = Item;
     export type GetAll = TyGeneral.PageFomServer<Item>;
     export type Update = Item;
-    export type Create = Item;
+    export type Remove = Item['id'];
   }
 
   export enum Status {

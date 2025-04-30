@@ -22,7 +22,7 @@ export const authApi = {
   },
 
   async activation(
-    activationToken: TyAuth.Request.Activation['activationToken']
+    activationToken: TyAuth.Request.Activation
   ) {
     return client.get(`/activate/${activationToken}`)
       .then<TyAuth.Response.Activation>(onRes.obtainData);

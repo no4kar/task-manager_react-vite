@@ -53,7 +53,7 @@ function FuncComponent() {
   const onSubmit: SubmitHandler<TyForm.Auth>
     = async (data) => {
       try {
-        await dispatch(authSlice.registrationThunk(data));
+        await dispatch(authSlice.asyncThunk.registration(data));
       } catch (error) {
         console.error(error);
         alert((error as AxiosError).message);

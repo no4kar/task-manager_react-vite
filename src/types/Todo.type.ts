@@ -25,14 +25,16 @@ export namespace TyTodo {
       page?: number,
       size?: number,
     }
-    export type Update = Item;
     export type Create = TyTodo.CreationAttributes;
+    export type Update = Item;
+    export type Remove = Item['id'];
   }
 
   export namespace Response {
     export type GetAll = TyGeneral.PageFomServer<Item>;
-    export type Update = Item;
     export type Create = Item;
+    export type Update = Item;
+    export type Remove = Item['id'];
   }
 
   export enum Status {

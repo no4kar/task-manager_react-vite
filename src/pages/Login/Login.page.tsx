@@ -53,7 +53,7 @@ function FuncComponent() {
   const onSubmit: SubmitHandler<TyForm.Auth>
     = async (data) => {
       try {
-        await dispatch(authSlice.loginThunk(data));
+        await dispatch(authSlice.asyncThunk.login(data));
 
         // await login(data);
         // navigate(location.state?.from?.pathname || '/');
