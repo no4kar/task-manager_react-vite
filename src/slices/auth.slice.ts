@@ -237,5 +237,8 @@ export const {
           state.status = TySlice.Status.ERROR;
           state.author = null;
         });
+
+    // Note: No extraReducers for activationAndGetAllTasksThunk as it primarily dispatches another action
+    // and its fulfilled state doesn't directly modify this slice differently than asyncThunk.activation.fulfilled
   },
 });
