@@ -5,7 +5,7 @@ import { env } from '../constants/varsFromEnv';
 export function getClient(
   baseURL = env.API_URL,
 ) {
-  // console.info(`BASE_URL = ${baseURL}`);// eslint-disable-line
+  // logger.info(`BASE_URL = ${baseURL}`);// eslint-disable-line
 
   function request<T>(
     url: string,

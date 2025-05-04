@@ -9,15 +9,38 @@ import { TyAuth as TySlice } from '../types/Auth.type';
 import { authApi as sliceApi } from '../api/auth.api';
 import { accessTokenApi } from '../api/accessToken.api';
 import sliceNames from './names';
+import { logger } from '../utils/logger';
 
-export type ApiAsyncThunk<Req, Res>
+type SliceAsyncThunkThunk<Req, Res>
   = TyGeneral.ApiAsyncThunk<Req, Res>;
+type SliceAsyncThunkThunks = {
+  registration: SliceAsyncThunkThunk<
+    TySlice.Response.Registration,
+    TySlice.Request.Registration
+  >;
+  activation: SliceAsyncThunkThunk<
+    TySlice.Response.Activation,
+    TySlice.Request.Activation
+  >;
+  login: SliceAsyncThunkThunk<
+    TySlice.Response.Login,
+    TySlice.Request.Login
+  >;
+  logout: SliceAsyncThunkThunk<
+    TySlice.Response.Logout,
+    TySlice.Request.Logout
+  >;
+  refresh: SliceAsyncThunkThunk<
+    TySlice.Response.Refresh,
+    TySlice.Request.Refresh
+  >;
+};
 
 const { author: sliceName } = sliceNames;
 
 // Helper function to create async thunks
 function getAsyncThunk<Res, Req>(
-  action: string,
+  action: keyof SliceAsyncThunkThunks,
   fn: (arg: Req) => Promise<Res>
 ): AsyncThunk<Res, Req, Record<string, never>> {
   return createAsyncThunk<Res, Req>(
@@ -51,28 +74,7 @@ function getAsyncThunk<Res, Req>(
 
 
 // Grouping async thunks
-export const asyncThunk: {
-  registration: ApiAsyncThunk<
-    TySlice.Response.Registration,
-    TySlice.Request.Registration
-  >;
-  activation: ApiAsyncThunk<
-    TySlice.Response.Activation,
-    TySlice.Request.Activation
-  >;
-  login: ApiAsyncThunk<
-    TySlice.Response.Login,
-    TySlice.Request.Login
-  >;
-  logout: ApiAsyncThunk<
-    TySlice.Response.Logout,
-    TySlice.Request.Logout
-  >;
-  refresh: ApiAsyncThunk<
-    TySlice.Response.Refresh,
-    TySlice.Request.Refresh
-  >;
-} = {
+export const asyncThunk: SliceAsyncThunkThunks = {
   registration: getAsyncThunk('registration', sliceApi.registration),
   activation: getAsyncThunk('activation', sliceApi.activation),
   login: getAsyncThunk('login', sliceApi.login),
@@ -130,7 +132,7 @@ export const {
       .addCase(
         asyncThunk.registration.rejected,
         (state, action) => {
-          console.error(action);
+          logger.error(action);
           state.errorMsg
             = action.error.message
             || TySlice.Error.REGISTERATION;
@@ -155,7 +157,7 @@ export const {
       .addCase(
         asyncThunk.activation.rejected,
         (state, action) => {
-          console.error(action);
+          logger.error(action);
           state.errorMsg
             = action.error.message
             || TySlice.Error.ACTIVATION;
@@ -180,7 +182,7 @@ export const {
       .addCase(
         asyncThunk.login.rejected,
         (state, action) => {
-          console.error(action);
+          logger.error(action);
           state.errorMsg
             = action.error.message
             || TySlice.Error.LOGIN;
@@ -205,7 +207,7 @@ export const {
       .addCase(
         asyncThunk.logout.rejected,
         (state, action) => {
-          console.error(action);
+          logger.error(action);
           state.errorMsg
             = action.error.message
             || TySlice.Error.LOGOUT;
@@ -230,7 +232,7 @@ export const {
       .addCase(
         asyncThunk.refresh.rejected,
         (state, action) => {
-          console.error(action);
+          logger.error(action);
           state.errorMsg
             = action.error.message
             || TySlice.Error.REFRESH;

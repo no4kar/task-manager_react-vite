@@ -1,7 +1,7 @@
 import React from 'react';
 import cn from 'classnames';
 
-export const Pagination
+export const SimplePagination
   = React.memo(FuncComponent);
 
 function FuncComponent({
@@ -15,23 +15,22 @@ function FuncComponent({
     btnPrev?: Pick<
       React.DOMAttributes<HTMLButtonElement>,
       'onClick'>,
-    btnPage?: Pick<
-      React.DOMAttributes<HTMLButtonElement>,
-      'onClick'>,
     btnNext?: Pick<
       React.DOMAttributes<HTMLButtonElement>,
       'onClick'>,
   }
 }) {
-
   return (
-    <div className="flex items-center space-x-1">
+    // Using gap-x-4 for spacing between elements. Adjust as needed.
+    <div className="flex items-center gap-x-4">
+      {/* Prev Button - Styling mostly copied, adjusted props */}
       <button
+        type="button" // Good practice to add type="button"
         className={cn(
-          `px-3 py-2 rounded-md 
+          `px-3 py-2 rounded-md
             border border-gray-500 bg-gray-800
-            text-sm font-medium text-gray-300 
-            hover:bg-gray-600 hover:text-white transition-all`,
+            text-sm font-medium text-gray-300
+            hover:enabled:bg-gray-600 hover:enabled:text-white transition-all`, // Use hover:enabled:
           {
             'cursor-not-allowed opacity-50': currentPage === 1,
           }
@@ -43,29 +42,20 @@ function FuncComponent({
         Prev
       </button>
 
-      {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-        (page) => (
-          <button
-            data-page={page}
-            key={page}
-            className={`px-3 py-2 rounded-md border 
-              text-sm font-medium transition-all ${currentPage === page
-                ? 'bg-blue-500 text-white border-blue-500'
-                : 'bg-gray-800 text-gray-300 border-gray-500 hover:bg-gray-600 hover:text-white'
-              }`}
-            {...handlersFor.btnPage}
-          >
-            {page}
-          </button>
-        )
-      )}
+      {/* Page X of Y Text */}
+      <span className="text-sm font-medium text-gray-300 tabular-nums">
+        {/* Use clamped values for display consistency */}
+        {currentPage} of {totalPages}
+      </span>
 
+      {/* Next Button - Styling mostly copied, adjusted props */}
       <button
+        type="button" // Good practice to add type="button"
         className={cn(
-          `px-3 py-2 rounded-md 
+          `px-3 py-2 rounded-md
             border border-gray-500 bg-gray-800
-            text-sm font-medium text-gray-300 
-            hover:bg-gray-600 hover:text-white transition-all`,
+            text-sm font-medium text-gray-300
+            hover:enabled:bg-gray-600 hover:enabled:text-white transition-all`, // Use hover:enabled:
           {
             'cursor-not-allowed opacity-50': currentPage === totalPages,
           }

@@ -7,10 +7,16 @@ import axios, {
 } from 'axios';
 import { accessTokenApi } from '../api/accessToken.api';
 import { TyAuth } from '../types/Auth.type';
-import { env } from '../constants/varsFromEnv';
+import { logger } from './logger';
+
+type AxiosErrorResponse
+  = AxiosError<{
+    message: string;
+    error: string;
+  }>;
 
 export function getClient(
-  config: CreateAxiosDefaults<any>)
+  config: CreateAxiosDefaults<unknown>)
   : AxiosInstance {
   return axios.create(config);
 }
@@ -34,7 +40,7 @@ export const onRes = {
   },
 
   toConsoleInfo<T>(res: T) {
-    if (env.DEV_MODE) console.info(res);
+    logger.info(res);
 
     return res;
   },
@@ -46,12 +52,11 @@ export const onRes = {
     // prevent infinity loop
     let firstRequest = true;
 
-    return async (error: any) => {
-      const originalRequest = error.config;
-
+    return async (
+      error: AxiosErrorResponse
+    ): Promise<AxiosResponse | never> => {
       if (error.response?.status !== 401
-        || !firstRequest
-      ) {
+        || !firstRequest) {
         firstRequest = true;
         throw axiosErrorToError(error);
       }
@@ -59,21 +64,28 @@ export const onRes = {
       firstRequest = false;
 
       try {
-        const { accessToken } = await refresh();
+        const originalRequest
+          = error.config;
+
+        if (!originalRequest) {
+          throw new Error('Original request config is missing in Axios error.');
+        }
+
+        const {
+          accessToken
+        } = await refresh();
+
         accessTokenApi.save(accessToken);
         return client.request(originalRequest);
-      } catch (error: any) {
-        throw axiosErrorToError(error);
+      } catch (error: unknown) {
+        throw axiosErrorToError(error as AxiosErrorResponse);
       }
     };
   },
 }
 
 function axiosErrorToError(
-  error: AxiosError<{
-    message: string,
-    error: string,
-  }, any>,
+  error: AxiosErrorResponse,
 ) {
   return {
     code: `${error.response?.status} ${error.code}`,
