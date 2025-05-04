@@ -7,22 +7,20 @@ import { todosApi as sliceApi } from '../api/todos.api';
 import sliceNames from './names';
 import { logger } from '../utils/logger';
 
-type SliceAsyncThunkThunk<Req, Res>
-  = TyGeneral.ApiAsyncThunk<Req, Res>;
-type SliceAsyncThunkThunks = {
-  getAll: SliceAsyncThunkThunk<
+type SliceAsyncThunks = {
+  getAll: TyGeneral.ApiAsyncThunk<
     TySlice.Response.GetAll,
     TySlice.Request.GetAll
   >;
-  create: SliceAsyncThunkThunk<
+  create: TyGeneral.ApiAsyncThunk<
     TySlice.Response.Create,
     TySlice.Request.Create
   >;
-  update: SliceAsyncThunkThunk<
+  update: TyGeneral.ApiAsyncThunk<
     TySlice.Response.Update,
     TySlice.Request.Update
   >;
-  remove: SliceAsyncThunkThunk<
+  remove: TyGeneral.ApiAsyncThunk<
     TySlice.Response.Remove,
     TySlice.Request.Remove
   >;
@@ -32,7 +30,7 @@ const { todo: sliceName } = sliceNames;
 
 // Helper function to create async thunks
 function getAsyncThunk<Res, Req>(
-  action: keyof SliceAsyncThunkThunks,
+  action: keyof SliceAsyncThunks,
   fn: (arg: Req) => Promise<Res>
 ): AsyncThunk<Res, Req, Record<string, never>> {
   return createAsyncThunk<Res, Req>(
@@ -41,7 +39,7 @@ function getAsyncThunk<Res, Req>(
 }
 
 // Grouping async thunks
-export const asyncThunk: SliceAsyncThunkThunks = {
+export const asyncThunk: SliceAsyncThunks = {
   getAll: getAsyncThunk('getAll', sliceApi.getAll),
   create: getAsyncThunk('create', sliceApi.create),
   update: getAsyncThunk('update', sliceApi.update),

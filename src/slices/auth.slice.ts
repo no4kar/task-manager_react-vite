@@ -11,26 +11,24 @@ import { accessTokenApi } from '../api/accessToken.api';
 import sliceNames from './names';
 import { logger } from '../utils/logger';
 
-type SliceAsyncThunkThunk<Req, Res>
-  = TyGeneral.ApiAsyncThunk<Req, Res>;
-type SliceAsyncThunkThunks = {
-  registration: SliceAsyncThunkThunk<
+type SliceAsyncThunks = {
+  registration: TyGeneral.ApiAsyncThunk<
     TySlice.Response.Registration,
     TySlice.Request.Registration
   >;
-  activation: SliceAsyncThunkThunk<
+  activation: TyGeneral.ApiAsyncThunk<
     TySlice.Response.Activation,
     TySlice.Request.Activation
   >;
-  login: SliceAsyncThunkThunk<
+  login: TyGeneral.ApiAsyncThunk<
     TySlice.Response.Login,
     TySlice.Request.Login
   >;
-  logout: SliceAsyncThunkThunk<
+  logout: TyGeneral.ApiAsyncThunk<
     TySlice.Response.Logout,
     TySlice.Request.Logout
   >;
-  refresh: SliceAsyncThunkThunk<
+  refresh: TyGeneral.ApiAsyncThunk<
     TySlice.Response.Refresh,
     TySlice.Request.Refresh
   >;
@@ -40,7 +38,7 @@ const { author: sliceName } = sliceNames;
 
 // Helper function to create async thunks
 function getAsyncThunk<Res, Req>(
-  action: keyof SliceAsyncThunkThunks,
+  action: keyof SliceAsyncThunks,
   fn: (arg: Req) => Promise<Res>
 ): AsyncThunk<Res, Req, Record<string, never>> {
   return createAsyncThunk<Res, Req>(
@@ -74,7 +72,7 @@ function getAsyncThunk<Res, Req>(
 
 
 // Grouping async thunks
-export const asyncThunk: SliceAsyncThunkThunks = {
+export const asyncThunk: SliceAsyncThunks = {
   registration: getAsyncThunk('registration', sliceApi.registration),
   activation: getAsyncThunk('activation', sliceApi.activation),
   login: getAsyncThunk('login', sliceApi.login),
