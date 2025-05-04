@@ -21,7 +21,7 @@ export namespace TyGeneral {
   export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
   export type UseState<T> = (initSt: T | (() => T)) => [T, SetState<T>];
 
-  
+
   export type ApiAsyncThunk<Res, Req>
     = AsyncThunk<Res, Req, Record<string, never>>;
 }

@@ -15,6 +15,7 @@ import { FormField } from '../../components/FormField';
 import { env } from '../../constants/varsFromEnv';
 import { selectFromStore } from '../../store/store';
 import { TyAuth } from '../../types/Auth.type';
+import { logger } from '../../utils/logger';
 
 export const SignupPage = React.memo(FuncComponent);
 
@@ -55,7 +56,7 @@ function FuncComponent() {
       try {
         await dispatch(authSlice.asyncThunk.registration(data));
       } catch (error) {
-        console.error(error);
+        logger.error(error);
         alert((error as AxiosError).message);
       }
     };

@@ -12,11 +12,11 @@ import { TyEvt } from '../../types/Evt.type';
 
 import { TaskHeader } from '../../components/TaskHeader';
 import { TodoItem } from '../../components/TodoItem';
-import { Pagination } from '../../components/Pagination';
+import { SimplePagination as Pagination } from '../../components/Pagination';
 import { ItemsPerPage } from '../../components/ItemsPerPage';
-import { createSearchParamUpdater } from '../../utils/helpers';
+import { createSearchParamUpdater } from '../../utils';
 import { Loader } from '../../components/Loader';
-import { env } from '../../constants/varsFromEnv';
+import { logger } from '../../utils/logger';
 
 export const TaskPage
   = React.memo(FuncComponent);
@@ -46,10 +46,11 @@ function FuncComponent() {
     searchParams,
     setSearchParams,
   ] = ReactRouterDom.useSearchParams();
-  const updateSearchParams = React.useCallback(
-    createSearchParamUpdater(setSearchParams),
-    [setSearchParams],
-  );
+  const updateSearchParams
+    = React.useCallback(
+      createSearchParamUpdater(setSearchParams),
+      [setSearchParams],
+    );
 
   const selectedTaskId
     = searchParams.get(TyTask.SearchParams.ID);
@@ -150,7 +151,7 @@ function FuncComponent() {
     }
   }, [selectedTaskId, currentPage, itemsPerPage]);
 
-  if (env.DEV_MODE && 1) console.info(`
+  logger.info(`
     selectedTaskId = ${selectedTaskId}
     totalItems = ${totalItems}
     itemsPerPage = ${itemsPerPage}
@@ -203,14 +204,14 @@ function FuncComponent() {
                     [TyTask.SearchParams.PAGE]: String(currentPage - 1),
                   })
                 },
-                btnPage: {
-                  onClick: (event) => {
-                    updateSearchParams(searchParams, {
-                      [TyTask.SearchParams.PAGE]:
-                        (event.target as HTMLButtonElement).dataset.page || null,
-                    })
-                  }
-                },
+                // btnPage: {
+                //   onClick: (event) => {
+                //     updateSearchParams(searchParams, {
+                //       [TyTask.SearchParams.PAGE]:
+                //         (event.target as HTMLButtonElement).dataset.page || null,
+                //     })
+                //   }
+                // },
                 btnNext: {
                   onClick: () => updateSearchParams(searchParams, {
                     [TyTask.SearchParams.PAGE]: String(currentPage + 1),
