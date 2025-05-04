@@ -42,7 +42,9 @@ function FuncComponent() {
           Processing...
         </h1>
 
-        <p className='text-xs sm:text-sm font-light text-system-warn animate-pulse'>
+        <p className='text-xs sm:text-sm font-light text-system-warn 
+        animate-pulse'
+        >
           Remember about 50 sec delay.
         </p>
       </>

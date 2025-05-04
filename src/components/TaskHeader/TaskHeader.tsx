@@ -11,7 +11,7 @@ import { selectFromStore } from '../../store/store';
 import { Loader } from '../Loader';
 import { DropdownReusable as Dropdown } from '../Dropdown';
 import * as tasksSlice from '../../slices/tasks.slice';
-import { createSearchParamUpdater } from '../../utils/helpers';
+import { createSearchParamUpdater } from '../../utils';
 
 export const TaskHeader
   = React.memo(FuncComponent);
@@ -20,7 +20,8 @@ function FuncComponent({
   onTodoCreate,
   onTodoError = () => { },
 }: {
-  onTodoCreate: (todo: TyTodo.CreationAttributes) => Promise<TyTodo.Item | void>;
+  onTodoCreate: (todo: TyTodo.CreationAttributes)
+    => Promise<TyTodo.Item | void>;
   onTodoError?: (errMsg: TyTodo.Error) => void;
 }) {
   const [

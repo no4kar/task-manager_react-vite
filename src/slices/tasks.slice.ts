@@ -1,16 +1,38 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { AsyncThunk } from '@reduxjs/toolkit';
 
+import { TyGeneral } from '../types/General.type';
 import { TyTask as TySlice } from '../types/Task.type';
 import { tasksApi as sliceApi } from '../api/tasks.api';
-import type { ApiAsyncThunk } from './auth.slice';
 import sliceNames from './names';
+import { logger } from '../utils/logger';
+
+type SliceAsyncThunkThunk<Req, Res>
+  = TyGeneral.ApiAsyncThunk<Req, Res>;
+type SliceAsyncThunkThunks = {
+  getAll: SliceAsyncThunkThunk<
+    TySlice.Response.GetAll,
+    TySlice.Request.GetAll
+  >;
+  create: SliceAsyncThunkThunk<
+    TySlice.Response.Create,
+    TySlice.Request.Create
+  >;
+  update: SliceAsyncThunkThunk<
+    TySlice.Response.Update,
+    TySlice.Request.Update
+  >;
+  remove: SliceAsyncThunkThunk<
+    TySlice.Response.Remove,
+    TySlice.Request.Remove
+  >;
+};
 
 const { task: sliceName } = sliceNames;
 
 // Helper function to create async thunks
 function getAsyncThunk<Res, Req>(
-  action: string,
+  action: keyof SliceAsyncThunkThunks,
   fn: (arg: Req) => Promise<Res>
 ): AsyncThunk<Res, Req, Record<string, never>> {
   return createAsyncThunk<Res, Req>(
@@ -19,24 +41,7 @@ function getAsyncThunk<Res, Req>(
 }
 
 // Grouping async thunks
-export const asyncThunk: {
-  getAll: ApiAsyncThunk<
-    TySlice.Response.GetAll,
-    TySlice.Request.GetAll
-  >;
-  create: ApiAsyncThunk<
-    TySlice.Response.Create,
-    TySlice.Request.Create
-  >;
-  update: ApiAsyncThunk<
-    TySlice.Response.Update,
-    TySlice.Request.Update
-  >;
-  remove: ApiAsyncThunk<
-    TySlice.Response.Remove,
-    TySlice.Request.Remove
-  >;
-} = {
+export const asyncThunk: SliceAsyncThunkThunks = {
   getAll: getAsyncThunk('getAll', sliceApi.getAll),
   create: getAsyncThunk('create', sliceApi.create),
   update: getAsyncThunk('update', sliceApi.update),
@@ -95,7 +100,7 @@ export const {
         state.status = TySlice.Status.NONE;
       })
       .addCase(asyncThunk.getAll.rejected, (state, action) => {
-        console.error(action);
+        logger.error(action);
 
         state.status = TySlice.Status.ERROR;
         state.errorMsg = TySlice.Error.LOAD;
@@ -111,7 +116,7 @@ export const {
         state.status = TySlice.Status.NONE;
       })
       .addCase(asyncThunk.create.rejected, (state, action) => {
-        console.error(action);
+        logger.error(action);
 
         state.status = TySlice.Status.ERROR;
         state.errorMsg = TySlice.Error.UNABLE_ADD;
@@ -128,7 +133,7 @@ export const {
         state.status = TySlice.Status.NONE;
       })
       .addCase(asyncThunk.remove.rejected, (state, action) => {
-        console.error(action);
+        logger.error(action);
 
         state.status = TySlice.Status.ERROR;
         state.errorMsg = TySlice.Error.UNABLE_DELETE;
@@ -147,7 +152,7 @@ export const {
         state.status = TySlice.Status.NONE;
       })
       .addCase(asyncThunk.update.rejected, (state, action) => {
-        console.error(action);
+        logger.error(action);
 
         state.status = TySlice.Status.ERROR;
         state.errorMsg = TySlice.Error.UNABLE_UPDATE;

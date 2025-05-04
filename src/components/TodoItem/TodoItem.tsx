@@ -2,7 +2,7 @@ import React from 'react';
 import cn from 'classnames';
 
 import { Loader } from '.././Loader';
-import { truncateString } from '../../utils/helpers';
+import { truncateString } from '../../utils';
 
 import { TyTodo } from '../../types/Todo.type';
 import { TyEvt } from '../../types/Evt.type';
@@ -14,8 +14,8 @@ export const TodoItem = React.memo(({
   isProcessed = false,
 }: {
   todo: TyTodo.Item;
-  onDelete: (todo: TyTodo.Item) => Promise<any>;
-  onUpdate: (updatedTodo: TyTodo.Item) => Promise<any>;
+  onDelete: (todo: TyTodo.Item) => Promise<unknown>;
+  onUpdate: (updatedTodo: TyTodo.Item) => Promise<unknown>;
   isProcessed?: boolean;
 }) => {
   const {

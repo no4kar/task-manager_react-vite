@@ -55,7 +55,7 @@ function FuncComponent() {
       try {
         await dispatch(authSlice.asyncThunk.registration(data));
       } catch (error) {
-        console.error(error);
+        logger.error(error);
         alert((error as AxiosError).message);
       }
     };

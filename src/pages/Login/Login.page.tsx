@@ -16,6 +16,7 @@ import { authValidation } from '../../constants/formValidation';
 import { TyForm } from '../../types/Form.type';
 import { FormField } from '../../components/FormField';
 import { TyAuth } from '../../types/Auth.type';
+import { logger } from '../../utils/logger';
 
 export const LoginPage = React.memo(FuncComponent);
 
@@ -58,7 +59,7 @@ function FuncComponent() {
         // await login(data);
         // navigate(location.state?.from?.pathname || '/');
       } catch (error) {
-        console.error(error);
+        logger.error(error);
         alert((error as AxiosError).message);
       }
     };
@@ -112,7 +113,8 @@ function FuncComponent() {
             type='submit'
             disabled={!isValid}
             title='You can leave default values'
-            className={cn('w-full py-2 bg-red-600 text-white rounded hover:opacity-70', {
+            className={cn('w-full py-2' +
+              'bg-red-600 text-white rounded hover:opacity-70', {
               'blur-[2px]': !isValid,
             })}
           >
