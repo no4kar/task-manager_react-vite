@@ -21,8 +21,11 @@ export const env: {
     import.meta.env.VITE_LOCAL_CLIENT_PREFIX
     || 'TASK_MANAGER_',
 
-  LOG_LEVELS:
-    (import.meta.env.VITE_LOG_LEVELS || '')
-      .toUpperCase()
-      .split(/\s*[\,\.\s]\s*/g), /* eslint-disable-line no-useless-escape */
+  LOG_LEVELS: ({
+    development: 'DEBUG,INFO,WARN,ERROR',
+    production: import.meta.env.VITE_LOG_LEVELS,
+  }[import.meta.env.MODE]
+    ?? 'DEBUG,INFO,WARN,ERROR')
+    .toUpperCase()
+    .split(/\s*[\,\.\s]\s*/g), /* eslint-disable-line no-useless-escape */
 });

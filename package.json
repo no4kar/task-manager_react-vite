@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "npm run clean-folder && tsc -b",
-    "build-dev": "npm run prebuild && VITE_LOG_LEVELS=DEBUG,INFO,WARN,ERROR vite build --mode development",
-    "build": "npm run prebuild && VITE_LOG_LEVELS=ERROR vite build --mode production",
+    "build-dev": "npm run prebuild && vite build --mode development",
+    "build": "npm run prebuild && vite build --mode production",
     "preview": "vite preview --port 5173",
     "deploy": "gh-pages -d dist",
     "clean-cache": "npm cache clean --force",
