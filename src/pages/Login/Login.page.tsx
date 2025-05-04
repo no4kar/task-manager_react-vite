@@ -45,7 +45,9 @@ function FuncComponent() {
   ) {
     return (
       <Navigate
-        to={location.state?.from?.pathname || '/tasks'}
+        to={(location.state?.from?.pathname
+          + location.state?.from?.search)
+          || '/tasks'}
         replace
       />
     );
@@ -113,7 +115,7 @@ function FuncComponent() {
             type='submit'
             disabled={!isValid}
             title='You can leave default values'
-            className={cn('w-full py-2' +
+            className={cn('w-full py-2',
               'bg-red-600 text-white rounded hover:opacity-70', {
               'blur-[2px]': !isValid,
             })}

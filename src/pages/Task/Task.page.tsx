@@ -12,7 +12,7 @@ import { TyEvt } from '../../types/Evt.type';
 
 import { TaskHeader } from '../../components/TaskHeader';
 import { TodoItem } from '../../components/TodoItem';
-import { Pagination } from '../../components/Pagination';
+import { SimplePagination as Pagination } from '../../components/Pagination';
 import { ItemsPerPage } from '../../components/ItemsPerPage';
 import { createSearchParamUpdater } from '../../utils';
 import { Loader } from '../../components/Loader';
@@ -204,14 +204,14 @@ function FuncComponent() {
                     [TyTask.SearchParams.PAGE]: String(currentPage - 1),
                   })
                 },
-                btnPage: {
-                  onClick: (event) => {
-                    updateSearchParams(searchParams, {
-                      [TyTask.SearchParams.PAGE]:
-                        (event.target as HTMLButtonElement).dataset.page || null,
-                    })
-                  }
-                },
+                // btnPage: {
+                //   onClick: (event) => {
+                //     updateSearchParams(searchParams, {
+                //       [TyTask.SearchParams.PAGE]:
+                //         (event.target as HTMLButtonElement).dataset.page || null,
+                //     })
+                //   }
+                // },
                 btnNext: {
                   onClick: () => updateSearchParams(searchParams, {
                     [TyTask.SearchParams.PAGE]: String(currentPage + 1),
