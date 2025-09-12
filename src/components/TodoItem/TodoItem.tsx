@@ -18,11 +18,14 @@ export const TodoItem = React.memo(({
   onUpdate: (updatedTodo: TyTodo.Item) => Promise<unknown>;
   isProcessed?: boolean;
 }) => {
+  //#region const
   const {
     title,
     completed,
   } = todo;
+  //#endregion
 
+  //#region useState
   const [
     isEditing,
     setIsEditing,
@@ -31,9 +34,12 @@ export const TodoItem = React.memo(({
     newTitle,
     setNewTitle,
   ] = React.useState(title);
-  const titleField
-    = React.useRef<HTMLTextAreaElement>(null);
+  //#endregion
 
+  const titleField
+  = React.useRef<HTMLTextAreaElement>(null);
+  
+  //#region handle
   const handleDelete = () => {
     onDelete(todo)
       .then(() => setIsEditing(false))
@@ -41,7 +47,7 @@ export const TodoItem = React.memo(({
   };
 
   const handleToggleComplete = () => {
-    const updatedTodo = {
+    const updatedTodo: TyTodo.Item = {
       ...todo,
       completed: !todo.completed,
     };
@@ -57,25 +63,33 @@ export const TodoItem = React.memo(({
       return;
     }
 
-    const trimmedTitle = newTitle.trim();
+    const trimmedTitle
+      = newTitle.trim();
 
     switch (trimmedTitle) {
-      case '':
+      case '': {
         handleDelete();
 
         break;
+      }
 
-      case title:
+      case title: {
         setIsEditing(false);
 
         break;
+      }
 
-      default:
+      default: {
         if (titleField.current) {
           titleField.current.disabled = true;
         }
 
-        onUpdate({ ...todo, title: trimmedTitle })
+        const updatedTodo: TyTodo.Item = {
+          ...todo,
+          title: trimmedTitle,
+        };
+
+        onUpdate(updatedTodo)
           .then(() => {
             setIsEditing(false);
             if (titleField.current) {
@@ -83,8 +97,8 @@ export const TodoItem = React.memo(({
             }
           })
           .catch(() => titleField.current?.focus());
-
         break;
+      }
     }
   };
 
@@ -101,12 +115,15 @@ export const TodoItem = React.memo(({
         break;
     }
   };
+  //#endregion
 
+  //#region useEffect
   React.useEffect(() => {
     if (titleField.current) {
       titleField.current.focus();
     }
   }, [isEditing]);
+  //#endregion
 
   return (
     <div

@@ -64,9 +64,10 @@ function FuncComponent({
   const isTodosLoading
     = todosStatus === TyTodo.Status.LOADING;
 
-  const handleInputChange = (event: TyEvt.Change.TextAreaElmt) => {
-    setTitle(event.target.value);
-  };
+  const handleInputChange
+    = (event: TyEvt.Change.TextAreaElmt) => {
+      setTitle(event.target.value);
+    };
 
   const handleSelectTask
     = (taskId: TyTask.Item['id']) => {

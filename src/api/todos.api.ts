@@ -49,14 +49,24 @@ export const todosApi = {
       .then<TyTodo.Item['id']>(() => todoId);
   },
 
-  async update({
-    id,
-    userId,
-    title,
-    completed,
-  }: TyTodo.Request.Update) {
-    return client.put(`/${id}`, { userId, title, completed })
-      .then<TyTodo.Response.Update>(onRes.obtainData);
+  async update(updatedItem: TyTodo.Request.Update) {
+    const updatedProps: TyTodo.Request.UpdateProps = {
+      userId: updatedItem.userId,
+      title: updatedItem.title,
+      completed: updatedItem.completed,
+    };
+
+    if (updatedItem.image) {
+      updatedProps.image = updatedItem.image;
+    }
+
+    return client.put(
+      `/${updatedItem.id}`,
+      updatedProps, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }).then<TyTodo.Response.Update>(onRes.obtainData);
   },
 };
 

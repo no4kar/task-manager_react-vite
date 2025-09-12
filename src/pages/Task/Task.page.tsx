@@ -18,6 +18,12 @@ import { createSearchParamUpdater } from '../../utils';
 import { Loader } from '../../components/Loader';
 import { logger } from '../../utils/logger';
 
+const {
+  ID,
+  ITEM_PER_PAGE,
+  PAGE,
+} = TyTask.SearchParams;
+
 export const TaskPage
   = React.memo(FuncComponent);
 
@@ -25,6 +31,7 @@ const optionsPerPage = [5, 10, 20];
 const defualtPage = '1';
 
 function FuncComponent() {
+  //#region useState
   const [
     totalItems,
     setTotalItems
@@ -33,15 +40,17 @@ function FuncComponent() {
     processings,
     setProcessings
   ] = React.useState<TyTodo.Item['id'][]>([]);
+  //#endregion useState
 
-  // Redux
+  //#region RTK
   const {
     items: todos,
     status: todosStatus,
   } = useReduxSelector(selectFromStore('todos'));
   const dispatch = useReduxDispatch();
+  //#endregion RTK
 
-  // RRD
+  //#region RRD
   const [
     searchParams,
     setSearchParams,
@@ -51,14 +60,15 @@ function FuncComponent() {
       createSearchParamUpdater(setSearchParams),
       [setSearchParams],
     );
+  //#endregion RRD
 
+  //#region const
   const selectedTaskId
-    = searchParams.get(TyTask.SearchParams.ID);
+    = searchParams.get(ID);
   const itemsPerPage
-    = Number(searchParams.get(TyTask.SearchParams.ITEM_PER_PAGE));
+    = Number(searchParams.get(ITEM_PER_PAGE));
   const currentPage
-    = Number(searchParams.get(TyTask.SearchParams.PAGE));
-
+    = Number(searchParams.get(PAGE));
   const isTodosLoading
     = todosStatus === TyTodo.Status.LOADING;
 
@@ -79,11 +89,16 @@ function FuncComponent() {
         }
       });
     }, [dispatch]);
+  //#endregion const
 
-  // useRef
-  const refetchTodosRef = React.useRef(refetchTodos);
-  const updateSearchParamsRef = React.useRef(updateSearchParams);
-  const searchParamsRef = React.useRef(searchParams);
+  //#region useRef
+  const refetchTodosRef
+    = React.useRef(refetchTodos);
+  const updateSearchParamsRef
+    = React.useRef(updateSearchParams);
+  const searchParamsRef
+    = React.useRef(searchParams);
+  //#endregion useRef
 
   const addTodo = React.useCallback(
     (newTodo: TyTodo.CreationAttributes) => {
@@ -113,20 +128,25 @@ function FuncComponent() {
     }, [dispatch]);
 
 
+  //#region useEffect
   // use useRef to store and persist the objects without causing unnecessary re-renders
   React.useEffect(() => {
-    refetchTodosRef.current = refetchTodos;
-    updateSearchParamsRef.current = updateSearchParams;
-    searchParamsRef.current = searchParams;
+    refetchTodosRef.current
+      = refetchTodos;
+    updateSearchParamsRef.current
+      = updateSearchParams;
+    searchParamsRef.current
+      = searchParams;
   }, [refetchTodos, updateSearchParams, searchParams]);
 
   // if URL without id, select null task and reset todos
   React.useEffect(() => {
     if (!selectedTaskId) {
-      updateSearchParamsRef.current(searchParamsRef.current, {
-        [TyTask.SearchParams.ID]: null,
-        [TyTask.SearchParams.PAGE]: null,
-        [TyTask.SearchParams.ITEM_PER_PAGE]: null,
+      updateSearchParamsRef.current(
+        searchParamsRef.current, {
+        [ID]: null,
+        [PAGE]: null,
+        [ITEM_PER_PAGE]: null,
       });
 
       dispatch(todosSlice.reset());
@@ -137,9 +157,10 @@ function FuncComponent() {
   // defualt pagable sets and first request
   React.useEffect(() => {
     if (selectedTaskId) {
-      updateSearchParamsRef.current(searchParamsRef.current, {
-        [TyTask.SearchParams.PAGE]: defualtPage,
-        [TyTask.SearchParams.ITEM_PER_PAGE]: String(optionsPerPage[0]),
+      updateSearchParamsRef.current(
+        searchParamsRef.current, {
+        [PAGE]: defualtPage,
+        [ITEM_PER_PAGE]: String(optionsPerPage[0]),
       });
     }
   }, [selectedTaskId]);
@@ -150,6 +171,7 @@ function FuncComponent() {
       refetchTodosRef.current(selectedTaskId, currentPage, itemsPerPage);
     }
   }, [selectedTaskId, currentPage, itemsPerPage]);
+  //#endregion useEffect
 
   logger.info(`
     selectedTaskId = ${selectedTaskId}
@@ -186,9 +208,10 @@ function FuncComponent() {
               handlersFor={{
                 select: {
                   onChange: (event: TyEvt.Change.SelectElmt) => {
-                    updateSearchParams(searchParams, {
-                      [TyTask.SearchParams.ITEM_PER_PAGE]: event.target.value,
-                      [TyTask.SearchParams.PAGE]: defualtPage,
+                    updateSearchParams(
+                      searchParams, {
+                      [ITEM_PER_PAGE]: event.target.value,
+                      [PAGE]: defualtPage,
                     })
                   }
                 }
@@ -200,21 +223,23 @@ function FuncComponent() {
               totalPages={Math.ceil(totalItems / itemsPerPage)}
               handlersFor={{
                 btnPrev: {
-                  onClick: () => updateSearchParams(searchParams, {
-                    [TyTask.SearchParams.PAGE]: String(currentPage - 1),
+                  onClick: () => updateSearchParams(
+                    searchParams, {
+                    [PAGE]: String(currentPage - 1),
                   })
                 },
                 // btnPage: {
                 //   onClick: (event) => {
                 //     updateSearchParams(searchParams, {
-                //       [TyTask.SearchParams.PAGE]:
+                //       [PAGE]:
                 //         (event.target as HTMLButtonElement).dataset.page || null,
                 //     })
                 //   }
                 // },
                 btnNext: {
-                  onClick: () => updateSearchParams(searchParams, {
-                    [TyTask.SearchParams.PAGE]: String(currentPage + 1),
+                  onClick: () => updateSearchParams(
+                    searchParams, {
+                    [PAGE]: String(currentPage + 1),
                   })
                 },
               }}

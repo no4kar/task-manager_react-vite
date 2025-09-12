@@ -21,6 +21,10 @@ export namespace TyGeneral {
   export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
   export type UseState<T> = (initSt: T | (() => T)) => [T, SetState<T>];
 
+  export type Image = {
+    src: string | null;    // blob: URL or base64 string for <img src=...>
+    raw: Blob | File | null; // the original File/Blob if user just picked
+  };
 
   export type ApiAsyncThunk<Res, Req>
     = AsyncThunk<Res, Req, Record<string, never>>;

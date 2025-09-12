@@ -9,6 +9,7 @@ export namespace TyTodo {
     userId: string;
     taskId: string;
     title: string;
+    image?: TyGeneral.Image;
     completed: boolean;
     createdAt: string;
     updatedAt: string;
@@ -26,6 +27,12 @@ export namespace TyTodo {
       size?: number,
     }
     export type Create = TyTodo.CreationAttributes;
+    export type UpdateProps = Omit<
+      TyTodo.Item,
+      | 'id'
+      | 'taskId'
+      | 'createdAt'
+      | 'updatedAt'>;
     export type Update = Item;
     export type Remove = Item['id'];
   }

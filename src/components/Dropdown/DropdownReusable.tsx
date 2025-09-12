@@ -11,7 +11,8 @@ type TyItem = {
 };
 
 export const DropdownReusable
-  = React.memo(FuncComponent);
+  // = FuncComponent;
+= React.memo(FuncComponent);
 
 function FuncComponent({
   items,
@@ -89,6 +90,12 @@ function FuncComponent({
       setMode('');
       setIsEditing(false);
     };
+
+  React.useEffect(() => {
+    if (!isEditing) {
+      setTitle(lableTitle);
+    }
+  }, [lableTitle]);
 
   return (
     <div
