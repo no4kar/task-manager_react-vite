@@ -63,7 +63,7 @@ function FuncComponent() {
       </main>
 
       <footer>
-        <div className='h-10 custom-page-container bg-gray-900' />
+        <div className='h-10 project-page-container bg-gray-900' />
       </footer>
 
       {messages && (

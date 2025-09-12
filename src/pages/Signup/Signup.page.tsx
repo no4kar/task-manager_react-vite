@@ -34,7 +34,7 @@ function FuncComponent() {
 
   if (authStatus === TyAuth.Status.REGISTERED) {
     return (
-      <div className='custom-page-container py-4 sm:py-6 md:py-10'>
+      <div className='project-page-container py-4 sm:py-6 md:py-10'>
         <div className='w-full max-w-md p-8 mx-auto
       bg-gray-800 text-gray-400 rounded-lg shadow-md space-y-4 sm:space-y-6'>
           <div
@@ -62,7 +62,7 @@ function FuncComponent() {
     };
 
   return (
-    <div className='custom-page-container py-4 sm:py-6 md:py-10'>
+    <div className='project-page-container py-4 sm:py-6 md:py-10'>
       <div className='w-full max-w-md p-8 mx-auto
       bg-gray-800 text-gray-400 rounded-lg shadow-md space-y-4 sm:space-y-6'>
         <div

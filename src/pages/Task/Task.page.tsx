@@ -187,7 +187,7 @@ function FuncComponent() {
     // border border-red-500
     >
       <div
-        className="custom-page-container 
+        className="project-page-container 
       py-4 sm:py-6 md:py-10
       space-y-4 sm:space-y-6"
       >
