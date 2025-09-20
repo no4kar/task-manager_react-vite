@@ -8,7 +8,7 @@ function FuncComponent() {
     <div
       className='bg-gray-800 text-white font-robotomono-normal'
     >
-      <div className='custom-page-container py-4 sm:py-6 md:py-10'>
+      <div className='project-page-container py-4 sm:py-6 md:py-10'>
         <h1 className='font-robotomono-bold text-3xl font-bold text-center mb-4'>
           The Task Manager Home Page
         </h1>

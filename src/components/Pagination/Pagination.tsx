@@ -1,6 +1,8 @@
 import React from 'react';
 import cn from 'classnames';
 
+import { Button } from '../Button';
+
 export const Pagination
   = React.memo(FuncComponent);
 
@@ -23,59 +25,53 @@ function FuncComponent({
       'onClick'>,
   }
 }) {
+  const isFirst = currentPage === 1;
+  const isLast = currentPage === totalPages;
 
   return (
-    <div className="flex items-center space-x-1">
-      <button
+    <div className="flex items-center gap-x-4">
+      <Button
         className={cn(
-          `px-3 py-2 rounded-md 
-            border border-gray-500 bg-gray-800
-            text-sm font-medium text-gray-300 
-            hover:bg-gray-600 hover:text-white transition-all`,
-          {
-            'cursor-not-allowed opacity-50': currentPage === 1,
-          }
-        )}
-        {...handlersFor.btnPrev}
-        disabled={currentPage === 1}
-        aria-label="Previous page" // Accessibility improvement
+          'hover:enabled:bg-gray-600 hover:enabled:text-white transition-all', {
+          'cursor-not-allowed opacity-50': isFirst,
+        })}
+        handlersFor={handlersFor.btnPrev}
+        disabled={isFirst}
+        ariaLabel="Previous page"
       >
-        Prev
-      </button>
+        <p>Prev</p>
+      </Button>
 
       {Array.from({ length: totalPages }, (_, index) => index + 1).map(
         (page) => (
-          <button
-            data-page={page}
+          <Button
             key={page}
-            className={`px-3 py-2 rounded-md border 
-              text-sm font-medium transition-all ${currentPage === page
+            dataPage={String(page)}
+            className={
+              `hover:enabled:bg-gray-600 hover:enabled:text-white transition-all ${currentPage === page
                 ? 'bg-blue-500 text-white border-blue-500'
                 : 'bg-gray-800 text-gray-300 border-gray-500 hover:bg-gray-600 hover:text-white'
-              }`}
-            {...handlersFor.btnPage}
+              }`
+            }
+            handlersFor={handlersFor.btnPage}
+            ariaLabel={`Page ${page}`}
           >
-            {page}
-          </button>
+            <p>{page}</p>
+          </Button>
         )
       )}
 
-      <button
+      <Button
         className={cn(
-          `px-3 py-2 rounded-md 
-            border border-gray-500 bg-gray-800
-            text-sm font-medium text-gray-300 
-            hover:bg-gray-600 hover:text-white transition-all`,
-          {
-            'cursor-not-allowed opacity-50': currentPage === totalPages,
-          }
-        )}
-        {...handlersFor.btnNext}
-        disabled={currentPage === totalPages}
-        aria-label="Next page" // Accessibility improvement
+          'hover:enabled:bg-gray-600 hover:enabled:text-white transition-all', {
+          'cursor-not-allowed opacity-50': isLast,
+        })}
+        handlersFor={handlersFor.btnNext}
+        disabled={isLast}
+        ariaLabel="Next page"
       >
-        Next
-      </button>
+        <p>Next</p>
+      </Button>
     </div>
   );
 }

@@ -33,7 +33,7 @@ function FuncComponent() {
   if (authStatus === TyAuth.Status.LOADING) {
     return <Loader
       style={{
-        container: `custom-page-container
+        container: `project-page-container
         py-4 sm:py-6 md:py-10
         h-full flex flex-col gap-4 items-center justify-center`
       }}>

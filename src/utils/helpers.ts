@@ -32,3 +32,39 @@ export function truncateString(
     return str;
   }
 }
+
+/**
+ * Converts a File object to a Base64-encoded string.
+ * 
+ * This function reads the content of the provided file and returns a Promise
+ * that resolves with the Base64 string representation of the file's data.
+ * 
+ * @param {File} file - The file to be converted to Base64.
+ * @returns {Promise<string>} A promise that resolves with the Base64-encoded string of the file. */
+export function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+
+    reader.readAsDataURL(file);
+  });
+}
+
+export function base64ToBlob(base64: string): Blob {
+  const [
+    metadata,
+    data,
+  ] = base64.split(',');
+
+  const mime = metadata.match(/:(.*?);/)?.[1] || '';
+  const binary = atob(data);
+  const array = new Uint8Array(binary.length);
+
+  for (let i = 0; i < binary.length; i++) {
+    array[i] = binary.charCodeAt(i);
+  }
+
+  return new Blob([array], { type: mime });
+}

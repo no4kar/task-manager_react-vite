@@ -34,4 +34,8 @@ export const logger = Object.freeze({
   error: isEnabled(LogLevel.ERROR)
     ? (...args: unknown[]) => console.error(...args)
     : nopFunc,
+
+  json: isEnabled(LogLevel.DEBUG)
+    ? (arg: unknown) => console.debug(JSON.stringify(arg, null, 2))
+    : nopFunc,
 });

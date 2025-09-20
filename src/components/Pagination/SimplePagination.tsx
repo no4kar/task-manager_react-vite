@@ -1,5 +1,6 @@
 import React from 'react';
 import cn from 'classnames';
+import { Button } from '../Button';
 
 export const SimplePagination
   = React.memo(FuncComponent);
@@ -18,54 +19,42 @@ function FuncComponent({
     btnNext?: Pick<
       React.DOMAttributes<HTMLButtonElement>,
       'onClick'>,
-  }
+  };
 }) {
+  const isFirst = currentPage === 1;
+  const isLast = currentPage === totalPages;
+
   return (
     // Using gap-x-4 for spacing between elements. Adjust as needed.
     <div className="flex items-center gap-x-4">
-      {/* Prev Button - Styling mostly copied, adjusted props */}
-      <button
-        type="button" // Good practice to add type="button"
+      <Button
         className={cn(
-          `px-3 py-2 rounded-md
-            border border-gray-500 bg-gray-800
-            text-sm font-medium text-gray-300
-            hover:enabled:bg-gray-600 hover:enabled:text-white transition-all`, // Use hover:enabled:
-          {
-            'cursor-not-allowed opacity-50': currentPage === 1,
-          }
-        )}
-        {...handlersFor.btnPrev}
-        disabled={currentPage === 1}
-        aria-label="Previous page" // Accessibility improvement
+          'hover:enabled:bg-gray-600 hover:enabled:text-white transition-all', {
+          'cursor-not-allowed opacity-50': isFirst,
+        })}
+        handlersFor={handlersFor.btnPrev}
+        disabled={isFirst}
+        ariaLabel="Previous page"
       >
-        Prev
-      </button>
+        <p>Prev</p>
+      </Button>
 
       {/* Page X of Y Text */}
       <span className="text-sm font-medium text-gray-300 tabular-nums">
-        {/* Use clamped values for display consistency */}
         {currentPage} of {totalPages}
       </span>
 
-      {/* Next Button - Styling mostly copied, adjusted props */}
-      <button
-        type="button" // Good practice to add type="button"
+      <Button
         className={cn(
-          `px-3 py-2 rounded-md
-            border border-gray-500 bg-gray-800
-            text-sm font-medium text-gray-300
-            hover:enabled:bg-gray-600 hover:enabled:text-white transition-all`, // Use hover:enabled:
-          {
-            'cursor-not-allowed opacity-50': currentPage === totalPages,
-          }
-        )}
-        {...handlersFor.btnNext}
-        disabled={currentPage === totalPages}
-        aria-label="Next page" // Accessibility improvement
+          'hover:enabled:bg-gray-600 hover:enabled:text-white transition-all', {
+          'cursor-not-allowed opacity-50': isLast,
+        })}
+        handlersFor={handlersFor.btnNext}
+        disabled={isLast}
+        ariaLabel="Next page"
       >
-        Next
-      </button>
-    </div>
+        <p>Next</p>
+      </Button>
+    </div >
   );
 }

@@ -1,9 +1,12 @@
+import { MB } from "./common";
+
 export const env: {
   DEV_MODE: boolean,
   API_URL: string;
   CORS_PROXY_URL: string;
   LOCAL_CLIENT_PREFIX: string;
   LOG_LEVELS: Array<string>;
+  MAX_IMAGE_SIZE: number;
 } = Object.freeze({
   DEV_MODE:
     import.meta.env.MODE === 'development',
@@ -28,4 +31,9 @@ export const env: {
     ?? 'DEBUG,INFO,WARN,ERROR')
     .toUpperCase()
     .split(/\s*[\,\.\s]\s*/g), /* eslint-disable-line no-useless-escape */
+<<<<<<< HEAD
+=======
+
+  MAX_IMAGE_SIZE: 2 * MB, /** 2 MB in bytes */
+>>>>>>> main
 });

@@ -19,7 +19,7 @@ function FuncComponent() {
   return (
     <div
       className='page__header
-    custom-page-container 
+    project-page-container 
     w-full py-4 sm:py-6 md:py-10 bg-gray-800'
     >
       <div

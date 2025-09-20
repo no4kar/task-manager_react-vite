@@ -24,4 +24,8 @@ dist-ssr
 *.sln
 *.sw?
 *.txt
+<<<<<<< HEAD
+=======
+*.sh
+>>>>>>> main
 .env
