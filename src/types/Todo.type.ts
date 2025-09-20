@@ -30,7 +30,6 @@ export namespace TyTodo {
     export type UpdateProps = Omit<
       TyTodo.Item,
       | 'id'
-      | 'taskId'
       | 'createdAt'
       | 'updatedAt'>;
     export type Update = Item;

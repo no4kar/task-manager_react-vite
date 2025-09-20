@@ -1,34 +1,36 @@
 import {
-  AsyncThunk,
-  createAsyncThunk,
   createSlice,
 } from '@reduxjs/toolkit';
 
-import { TyGeneral } from '../types/General.type';
 import { TyAuth as TySlice } from '../types/Auth.type';
 import { authApi as sliceApi } from '../api/auth.api';
 import { accessTokenApi } from '../api/accessToken.api';
-import sliceNames from './names';
+import { slices as sliceNames } from '../utils/entities';
 import { logger } from '../utils/logger';
+import { TyReduxHelper } from '../types/ReduxHelper.type';
+import { getAsyncThunk } from './helper.slice';
+
+type ApiAsyncThunk<Req, Res>
+  = TyReduxHelper.ApiAsyncThunk<Req, Res>;
 
 type SliceAsyncThunks = {
-  registration: TyGeneral.ApiAsyncThunk<
+  registration: ApiAsyncThunk<
     TySlice.Response.Registration,
     TySlice.Request.Registration
   >;
-  activation: TyGeneral.ApiAsyncThunk<
+  activation: ApiAsyncThunk<
     TySlice.Response.Activation,
     TySlice.Request.Activation
   >;
-  login: TyGeneral.ApiAsyncThunk<
+  login: ApiAsyncThunk<
     TySlice.Response.Login,
     TySlice.Request.Login
   >;
-  logout: TyGeneral.ApiAsyncThunk<
+  logout: ApiAsyncThunk<
     TySlice.Response.Logout,
     TySlice.Request.Logout
   >;
-  refresh: TyGeneral.ApiAsyncThunk<
+  refresh: ApiAsyncThunk<
     TySlice.Response.Refresh,
     TySlice.Request.Refresh
   >;
@@ -37,14 +39,16 @@ type SliceAsyncThunks = {
 const { author: sliceName } = sliceNames;
 
 // Helper function to create async thunks
-function getAsyncThunk<Res, Req>(
-  action: keyof SliceAsyncThunks,
-  fn: (arg: Req) => Promise<Res>
-): AsyncThunk<Res, Req, Record<string, never>> {
-  return createAsyncThunk<Res, Req>(
-    `${sliceName}/${action}Thunk`,
-    fn);
-}
+const sliceAsyncThunk
+  = getAsyncThunk<SliceAsyncThunks>(sliceName);
+// function getAsyncThunk<Res, Req>(
+//   action: keyof SliceAsyncThunks,
+//   fn: (arg: Req) => Promise<Res>
+// ): AsyncThunk<Res, Req, Record<string, never>> {
+//   return createAsyncThunk<Res, Req>(
+//     `${sliceName}/${action}Thunk`,
+//     fn);
+// }
 
 // import * as tasksSlice from './tasks.slice';
 // // Special thunk with custom logic involving dispatch
@@ -73,11 +77,11 @@ function getAsyncThunk<Res, Req>(
 
 // Grouping async thunks
 export const asyncThunk: SliceAsyncThunks = {
-  registration: getAsyncThunk('registration', sliceApi.registration),
-  activation: getAsyncThunk('activation', sliceApi.activation),
-  login: getAsyncThunk('login', sliceApi.login),
-  logout: getAsyncThunk('logout', sliceApi.logout),
-  refresh: getAsyncThunk('refresh', sliceApi.refresh),
+  registration: sliceAsyncThunk('registration', sliceApi.registration),
+  activation: sliceAsyncThunk('activation', sliceApi.activation),
+  login: sliceAsyncThunk('login', sliceApi.login),
+  logout: sliceAsyncThunk('logout', sliceApi.logout),
+  refresh: sliceAsyncThunk('refresh', sliceApi.refresh),
 };
 
 const initialState: {

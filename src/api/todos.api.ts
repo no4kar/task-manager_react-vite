@@ -51,6 +51,7 @@ export const todosApi = {
 
   async update(updatedItem: TyTodo.Request.Update) {
     const updatedProps: TyTodo.Request.UpdateProps = {
+      taskId: updatedItem.taskId,
       userId: updatedItem.userId,
       title: updatedItem.title,
       completed: updatedItem.completed,
@@ -62,11 +63,16 @@ export const todosApi = {
 
     return client.put(
       `/${updatedItem.id}`,
-      updatedProps, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }).then<TyTodo.Response.Update>(onRes.obtainData);
+      updatedProps
+    ).then<TyTodo.Response.Update>(onRes.obtainData);
+
+    // return client.put(
+    //   `/${updatedItem.id}`,
+    //   updatedProps, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data',
+    //   },
+    // }).then<TyTodo.Response.Update>(onRes.obtainData);
   },
 };
 

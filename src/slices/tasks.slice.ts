@@ -1,49 +1,54 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import type { AsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-import { TyGeneral } from '../types/General.type';
+import { TyReduxHelper } from '../types/ReduxHelper.type';
 import { TyTask as TySlice } from '../types/Task.type';
 import { tasksApi as sliceApi } from '../api/tasks.api';
-import sliceNames from './names';
+import { slices as sliceNames } from '../utils/entities';
 import { logger } from '../utils/logger';
+import { getAsyncThunk } from './helper.slice';
+
+type ApiAsyncThunk<Req, Res>
+  = TyReduxHelper.ApiAsyncThunk<Req, Res>;
 
 type SliceAsyncThunks = {
-  getAll: TyGeneral.ApiAsyncThunk<
+  getAll: ApiAsyncThunk<
     TySlice.Response.GetAll,
     TySlice.Request.GetAll
   >;
-  create: TyGeneral.ApiAsyncThunk<
+  create: ApiAsyncThunk<
     TySlice.Response.Create,
     TySlice.Request.Create
   >;
-  update: TyGeneral.ApiAsyncThunk<
+  update: ApiAsyncThunk<
     TySlice.Response.Update,
     TySlice.Request.Update
   >;
-  remove: TyGeneral.ApiAsyncThunk<
+  remove: ApiAsyncThunk<
     TySlice.Response.Remove,
     TySlice.Request.Remove
   >;
 };
 
-const { task: sliceName } = sliceNames;
+const { tasks: sliceName } = sliceNames;
 
 // Helper function to create async thunks
-function getAsyncThunk<Res, Req>(
-  action: keyof SliceAsyncThunks,
-  fn: (arg: Req) => Promise<Res>
-): AsyncThunk<Res, Req, Record<string, never>> {
-  return createAsyncThunk<Res, Req>(
-    `${sliceName}/${action}Thunk`,
-    fn);
-}
+const sliceAsyncThunk
+  = getAsyncThunk<SliceAsyncThunks>(sliceName);
+// function getAsyncThunk<Res, Req>(
+//   action: keyof SliceAsyncThunks,
+//   fn: (arg: Req) => Promise<Res>
+// ): AsyncThunk<Res, Req, Record<string, never>> {
+//   return createAsyncThunk<Res, Req>(
+//     `${sliceName}/${action}Thunk`,
+//     fn);
+// }
 
 // Grouping async thunks
 export const asyncThunk: SliceAsyncThunks = {
-  getAll: getAsyncThunk('getAll', sliceApi.getAll),
-  create: getAsyncThunk('create', sliceApi.create),
-  update: getAsyncThunk('update', sliceApi.update),
-  remove: getAsyncThunk('remove', sliceApi.remove),
+  getAll: sliceAsyncThunk('getAll', sliceApi.getAll),
+  create: sliceAsyncThunk('create', sliceApi.create),
+  update: sliceAsyncThunk('update', sliceApi.update),
+  remove: sliceAsyncThunk('remove', sliceApi.remove),
 };
 
 const initialState: {

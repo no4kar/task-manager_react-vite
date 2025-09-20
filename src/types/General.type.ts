@@ -1,8 +1,24 @@
-import React from 'react';
-import { AsyncThunk } from '@reduxjs/toolkit';
+// import { AsyncThunk } from '@reduxjs/toolkit';
 
 /* eslint @typescript-eslint/no-namespace: 'off' */
 export namespace TyGeneral {
+  export type EmptyObject
+    = Record<string, never>;
+  export type UnknownObject
+    = Record<string, unknown>;
+  export type AnyObject // not string, number, null, etc.
+    = Record<string, any>;
+  export type AnyValue
+    = unknown; // or even `any` if needed
+
+  export type Notification<
+    T1,
+    T2 = number
+  > = {
+    date: T2;
+    content: T1;
+  }
+
   export type PageFomServer<T> = {
     /** The total number of items found based on the search parameters. */
     total: number,
@@ -15,17 +31,22 @@ export namespace TyGeneral {
   };
 
   // To have autocompletion and avoid mistypes
-  export type RequestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
-  export type Status = 'IDLE' | 'LOADING' | 'SUCCEEDED' | 'FAILED';
-
-  export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
-  export type UseState<T> = (initSt: T | (() => T)) => [T, SetState<T>];
+  export type RequestMethod
+    = 'GET'
+    | 'POST'
+    | 'PATCH'
+    | 'DELETE';
+  export type Status
+    = 'IDLE'
+    | 'LOADING'
+    | 'SUCCEEDED'
+    | 'FAILED';
 
   export type Image = {
     src: string | null;    // blob: URL or base64 string for <img src=...>
     raw: Blob | File | null; // the original File/Blob if user just picked
   };
 
-  export type ApiAsyncThunk<Res, Req>
-    = AsyncThunk<Res, Req, Record<string, never>>;
+  // export type ApiAsyncThunk<Res, Req>
+  //   = AsyncThunk<Res, Req, Record<string, never>>;
 }
