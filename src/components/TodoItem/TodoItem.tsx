@@ -7,7 +7,10 @@ import { truncateString } from '../../utils';
 import { TyTodo } from '../../types/Todo.type';
 import { TyEvt } from '../../types/Evt.type';
 
-export const TodoItem = React.memo(({
+export const TodoItem
+  = React.memo(FuncComponent);
+
+function FuncComponent({
   todo,
   onDelete,
   onUpdate,
@@ -17,124 +20,71 @@ export const TodoItem = React.memo(({
   onDelete: (todo: TyTodo.Item) => Promise<unknown>;
   onUpdate: (updatedTodo: TyTodo.Item) => Promise<unknown>;
   isProcessed?: boolean;
-}) => {
-  //#region const
+}) {
   const {
     title,
     completed,
+    createdAt,
+    updatedAt,
   } = todo;
-  //#endregion
 
-  //#region useState
-  const [
-    isEditing,
-    setIsEditing,
-  ] = React.useState(false);
-  const [
-    newTitle,
-    setNewTitle,
-  ] = React.useState(title);
-  //#endregion
+  const [isEditing, setIsEditing] = React.useState(false);
 
-  const titleField
-  = React.useRef<HTMLTextAreaElement>(null);
-  
-  //#region handle
-  const handleDelete = () => {
-    onDelete(todo)
-      .then(() => setIsEditing(false))
-      .catch(() => titleField.current?.focus());
-  };
+  // callbacks are wrapped in useCallback so child components get stable refs
+  const handleDelete = React.useCallback(() => {
+    // return promise from onDelete; parent may show processing state externally
+    onDelete(todo).catch(() => {
+      // revert editing focus: no DOM access here — top-level can trigger editing false
+      // optionally set focus using refs if you split into files and forward refs
+    });
+    setIsEditing(false);
+  }, [onDelete, todo]);
 
-  const handleToggleComplete = () => {
-    const updatedTodo: TyTodo.Item = {
-      ...todo,
-      completed: !todo.completed,
-    };
+  const handleToggleComplete
+    = React.useCallback(() => {
+      const updatedTodo: TyTodo.Item = {
+        ...todo,
+        completed: !todo.completed,
+      };
 
-    onUpdate(updatedTodo)
-      .then(() => setIsEditing(false))
-      .catch(() => titleField.current?.focus());
-  };
+      onUpdate(updatedTodo)
+        .then(() => setIsEditing(false))
+        .catch(() => {
+          // focus handling can be done with forwarded refs if needed
+        });
+    }, [onUpdate, todo]);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (isProcessed) {
-      return;
-    }
-
-    const trimmedTitle
-      = newTitle.trim();
-
-    switch (trimmedTitle) {
-      case '': {
-        handleDelete();
-
-        break;
+  const handleSubmitTitle
+    = React.useCallback((newTitle: string) => {
+      if (newTitle === '') {
+        // deleting on empty title (same behaviour as original)
+        onDelete(todo)
+          .then(() => setIsEditing(false));
+        return;
       }
 
-      case title: {
+      if (newTitle === title) {
         setIsEditing(false);
-
-        break;
+        return;
       }
 
-      default: {
-        if (titleField.current) {
-          titleField.current.disabled = true;
-        }
+      const updatedTodo: TyTodo.Item = {
+        ...todo,
+        title: newTitle,
+      };
 
-        const updatedTodo: TyTodo.Item = {
-          ...todo,
-          title: trimmedTitle,
-        };
-
-        onUpdate(updatedTodo)
-          .then(() => {
-            setIsEditing(false);
-            if (titleField.current) {
-              titleField.current.disabled = false;
-            }
-          })
-          .catch(() => titleField.current?.focus());
-        break;
-      }
-    }
-  };
-
-  const handleKeyUp = (event: TyEvt.Keybr.TextAreaElmt) => {
-    switch (event.key) {
-      case 'Escape':
-        setIsEditing(false);
-        setNewTitle(title);
-
-        break;
-
-      default:
-
-        break;
-    }
-  };
-  //#endregion
-
-  //#region useEffect
-  React.useEffect(() => {
-    if (titleField.current) {
-      titleField.current.focus();
-    }
-  }, [isEditing]);
-  //#endregion
+      onUpdate(updatedTodo)
+        .then(() => setIsEditing(false));
+    }, [onDelete, onUpdate, todo]);
 
   return (
-    <div
-      className='relative'
-    >
+    <div className='relative'>
       {isProcessed && (
         <Loader
           style={{
             container: `absolute inset-0 z-[1] 
-            flex items-center justify-center 
-            bg-white bg-opacity-30 rounded`,
+              flex items-center justify-center 
+              bg-white bg-opacity-30 rounded`,
           }}
         />
       )}
@@ -147,78 +97,37 @@ export const TodoItem = React.memo(({
         })}
       >
         <div className='flex space-x-4'>
-          <button
-            onClick={handleToggleComplete}
-            className={cn(`w-11 sm:w-12 rounded aspect-square 
-              text-white hover:opacity-70`, {
-              'bg-system-success': completed,
-              'bg-gray-700': !completed,
-            })}
-          >
-            <i className={cn('w-4 aspect-square fa-circle', {
-              'fa-solid ': completed,
-              'fa-regular': !completed,
-            })} />
-          </button>
+          <CompletedButton
+            completed={completed}
+            onToggle={handleToggleComplete}
+          />
 
           <div className='grow flex flex-col justify-between'>
             <h2 className={cn('text-lg sm:text-xl font-bold', {
               'line-through text-gray-400': completed,
             })}>
-              {truncateString(todo.title, 11, '..')}
+              {truncateString(title, 11, '..')}
             </h2>
 
-            <p className='text-xs sm:text-sm font-light
-            text-gray-400'>
-              {(new Date(todo.createdAt))
-                .toLocaleString('ua-UA', { timeZone: 'UTC' })}
-            </p>
-
-            <p className='self-end
-              text-xs sm:text-sm font-light
-            text-gray-400'>
-              {(new Date(todo.updatedAt))
-                .toLocaleString('ua-UA', { timeZone: 'UTC' })}
-            </p>
+            <Dates
+              createdAt={createdAt}
+              updatedAt={updatedAt}
+            />
           </div>
 
-          <button
-            onClick={handleDelete}
-            className='w-11 sm:w-12 rounded aspect-square
-            bg-system-error text-white
-            hover:opacity-70'
-          >
-            <i className='w-4 aspect-square fa-solid fa-xmark' />
-          </button>
+          <Actions onDelete={handleDelete} />
         </div>
 
         {isEditing ? (
-          <form
-            onSubmit={handleSubmit}
-          >
-            {/* This form is shown instead of the title and remove button */}
-            <textarea
-              data-cy='TodoTitleField'
-              className='w-full max-h-[60vh]
-              resize-y overflow-hidden
-              flex-1 p-2 rounded'
-              placeholder='Empty todo will be deleted'
-              ref={titleField}
-              value={newTitle}
-              rows={(newTitle.match(/\n/g) || []).length + 1} // last row doesnt have '\n'
-              onChange={event => {
-                setNewTitle(event.target.value);
-                // event.target.style.height = 'auto'; // Reset the height
-                // event.target.style.height = `${event.target.scrollHeight}px`;
-              }}
-              onBlur={handleSubmit}
-              onKeyUp={handleKeyUp}
-            />
-          </form>
+          <Editor
+            initialTitle={title}
+            onSubmit={handleSubmitTitle}
+            onCancel={() => { setIsEditing(false); }}
+            isDisabled={isProcessed}
+          />
         ) : (
           <p
-            className={cn(
-              'text-xs sm:text-sm whitespace-pre-wrap cursor-pointer', {
+            className={cn('text-xs sm:text-sm whitespace-pre-wrap cursor-pointer', {
               'line-through text-gray-400': completed,
             })}
             onDoubleClick={() => setIsEditing(true)}
@@ -229,4 +138,126 @@ export const TodoItem = React.memo(({
       </div>
     </div>
   );
-});
+};
+
+/* -------------------------
+  Small components
+   ------------------------- */
+
+function CompletedButton({
+  completed,
+  onToggle,
+}: {
+  completed: boolean;
+  onToggle: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      onClick={onToggle}
+      className={cn(`w-11 sm:w-12 rounded aspect-square 
+        text-white hover:opacity-70`, {
+        'bg-system-success': completed,
+        'bg-gray-700': !completed,
+      })}
+      aria-pressed={completed}
+      title={completed ? 'Mark as not completed' : 'Mark as completed'}
+    >
+      <i className={cn('w-4 aspect-square fa-circle', {
+        'fa-solid ': completed,
+        'fa-regular': !completed,
+      })} />
+    </button>
+  );
+}
+
+function Dates({
+  createdAt,
+  updatedAt,
+}: {
+  createdAt: string | number;
+  updatedAt: string | number;
+}) {
+  // keep the same locale/timezone as original
+  return (
+    <>
+      <p className='text-xs sm:text-sm font-light text-gray-400'>
+        {(new Date(updatedAt))
+          .toLocaleString('ua-UA', { timeZone: 'UTC' })}
+      </p>
+
+      <p className='self-end text-xs sm:text-sm font-light text-gray-400'>
+        {(new Date(createdAt))
+          .toLocaleString('ua-UA', { timeZone: 'UTC' })}
+      </p>
+    </>
+  );
+}
+
+function Actions({
+  onDelete
+}: {
+  onDelete: () => void
+}) {
+  return (
+    <button
+      onClick={onDelete}
+      className='w-11 sm:w-12 rounded aspect-square
+      bg-system-error text-white hover:opacity-70'
+      title='Delete todo'
+    >
+      <i className='w-4 aspect-square fa-solid fa-xmark' />
+    </button>
+  );
+}
+
+function Editor({
+  initialTitle,
+  onSubmit,
+  onCancel,
+  isDisabled,
+}: {
+  initialTitle: string;
+  onSubmit: (newTitle: string) => void;
+  onCancel: () => void;
+  isDisabled?: boolean;
+}) {
+  const [value, setValue] = React.useState(initialTitle);
+  const ref = React.useRef<HTMLTextAreaElement | null>(null);
+
+  React.useEffect(() => {
+    ref.current?.focus();
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(value.trim());
+  };
+
+  const handleKeyUp = (e: TyEvt.Keybr.TextAreaElmt) => {
+    if (e.key === 'Escape') {
+      onCancel();
+      setValue(initialTitle);
+    }
+  };
+
+  // compute rows from newlines (same as original)
+  const rows = (value.match(/\n/g) || []).length + 1;
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <textarea
+        data-cy='TodoTitleField'
+        className='w-full max-h-[60vh] resize-y overflow-hidden flex-1 p-2 rounded'
+        placeholder='Empty todo will be deleted'
+        ref={ref}
+        value={value}
+        rows={rows}
+        disabled={isDisabled}
+        onChange={e => setValue(e.target.value)}
+        onBlur={handleSubmit}
+        onKeyUp={handleKeyUp}
+      />
+    </form>
+  );
+}

@@ -4,14 +4,15 @@ export const TodoImageUpload
   = React.memo(FuncComponent);
 
 function FuncComponent({
-  onImageSelect,
+  onImageSelect = () => { },
 }: {
   onImageSelect: (file: File) => void;
 }) {
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
+    const file
+      = event.target.files?.[0];
 
     if (file) {
       onImageSelect(file);

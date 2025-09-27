@@ -29,19 +29,13 @@ type SliceAsyncThunks = {
   >;
 };
 
-const { tasks: sliceName } = sliceNames;
+const {
+  tasks: sliceName
+} = sliceNames;
 
 // Helper function to create async thunks
 const sliceAsyncThunk
   = getAsyncThunk<SliceAsyncThunks>(sliceName);
-// function getAsyncThunk<Res, Req>(
-//   action: keyof SliceAsyncThunks,
-//   fn: (arg: Req) => Promise<Res>
-// ): AsyncThunk<Res, Req, Record<string, never>> {
-//   return createAsyncThunk<Res, Req>(
-//     `${sliceName}/${action}Thunk`,
-//     fn);
-// }
 
 // Grouping async thunks
 export const asyncThunk: SliceAsyncThunks = {

@@ -28,52 +28,23 @@ type SliceAsyncThunks = {
   >;
   logout: ApiAsyncThunk<
     TySlice.Response.Logout,
-    TySlice.Request.Logout
+    undefined // because createAsyncThunk always expects the thunk function to accept one argument, and if the function has no parameters, TS infers undefined
+  // TySlice.Request.Logout
   >;
   refresh: ApiAsyncThunk<
     TySlice.Response.Refresh,
-    TySlice.Request.Refresh
+    undefined
+  // TySlice.Request.Refresh
   >;
 };
 
-const { author: sliceName } = sliceNames;
+const {
+  author: sliceName
+} = sliceNames;
 
 // Helper function to create async thunks
 const sliceAsyncThunk
   = getAsyncThunk<SliceAsyncThunks>(sliceName);
-// function getAsyncThunk<Res, Req>(
-//   action: keyof SliceAsyncThunks,
-//   fn: (arg: Req) => Promise<Res>
-// ): AsyncThunk<Res, Req, Record<string, never>> {
-//   return createAsyncThunk<Res, Req>(
-//     `${sliceName}/${action}Thunk`,
-//     fn);
-// }
-
-// import * as tasksSlice from './tasks.slice';
-// // Special thunk with custom logic involving dispatch
-// export const activationAndGetAllTasksThunk: AsyncThunk<
-//   TySlice.Response.Activation,
-//   TySlice.Request.Activation,
-//   Record<string, never>
-// > = createAsyncThunk(
-//   `${sliceName}/activationAndGetAllTasksThunk`, // Use a distinct name
-//   async (activationToken: TySlice.Request.Activation,
-//     { dispatch },
-//   ) => {
-//     // Perform the activation API call
-//     const response = await sliceApi.activation(activationToken);
-
-//     // Chain asyncThunk.getAll to fetch tasks for the activated user
-//     dispatch(tasksSlice.asyncThunk.getAll({
-//       userId: response.user.id,
-//     }));
-
-//     // Return the response for potential use (though not handled in extraReducers below)
-//     return response;
-//   }
-// );
-
 
 // Grouping async thunks
 export const asyncThunk: SliceAsyncThunks = {
