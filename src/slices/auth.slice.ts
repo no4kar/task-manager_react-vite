@@ -28,11 +28,13 @@ type SliceAsyncThunks = {
   >;
   logout: ApiAsyncThunk<
     TySlice.Response.Logout,
-    TySlice.Request.Logout
+    undefined // because createAsyncThunk always expects the thunk function to accept one argument, and if the function has no parameters, TS infers undefined
+  // TySlice.Request.Logout
   >;
   refresh: ApiAsyncThunk<
     TySlice.Response.Refresh,
-    TySlice.Request.Refresh
+    undefined
+  // TySlice.Request.Refresh
   >;
 };
 
