@@ -43,8 +43,8 @@ export namespace TyGeneral {
     | 'FAILED';
 
   export type Image = {
+    raw: Blob | File | null; // the original File/Blob if user just picked(frontend-only while user is editing)
     src: string | null;    // blob: URL or base64 string for <img src=...>
-    raw: Blob | File | null; // the original File/Blob if user just picked
   };
 
   // export type ApiAsyncThunk<Res, Req>

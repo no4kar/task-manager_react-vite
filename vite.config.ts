@@ -5,4 +5,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/task-manager_react-vite/',
   plugins: [react()],
+  server: {
+    watch: {
+      usePolling: true,
+      interval: 500
+    },
+  },
 })

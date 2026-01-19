@@ -9,7 +9,7 @@ export namespace TyTodo {
     userId: string;
     taskId: string;
     title: string;
-    image?: TyGeneral.Image;
+    images?: Array<TyGeneral.Image>;
     completed: boolean;
     createdAt: string;
     updatedAt: string;

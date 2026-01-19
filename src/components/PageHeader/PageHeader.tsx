@@ -17,7 +17,7 @@ function FuncComponent() {
   const navigate = useNavigate();
 
   return (
-    <div
+    <header
       className='page__header
     project-page-container 
     w-full py-4 sm:py-6 md:py-10 bg-gray-800'
@@ -97,6 +97,6 @@ function FuncComponent() {
           )}
         </div>
       </div>
-    </div>
+    </header>
   );
 }

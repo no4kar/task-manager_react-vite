@@ -57,8 +57,8 @@ export const todosApi = {
       completed: updatedItem.completed,
     };
 
-    if (updatedItem.image) {
-      updatedProps.image = updatedItem.image;
+    if (updatedItem.images) {
+      updatedProps.images = updatedItem.images;
     }
 
     return client.put(
