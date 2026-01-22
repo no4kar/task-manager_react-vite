@@ -1,7 +1,6 @@
 /* project.scss */
 
 .project {
-
   /* Custom Container Class */
   &-page-container {
     @apply px-5 sm:px-[70px] md:px-[75px] md:max-w-[1440px] md:mx-auto;
@@ -14,17 +13,17 @@
 
   // /* Project h1 */
   // &-h1 {
-  //   @apply font-robotomono-bold text-lg sm:text-xl md:text-2xl;
+  //   @apply font-base font-bold text-lg sm:text-xl md:text-2xl;
   // }
 
   // /* Project h2 */
   // &-h2 {
-  //   @apply font-robotomono-bold text-base sm:text-lg md:text-xl;
+  //   @apply font-base font-bold text-base sm:text-lg md:text-xl;
   // }
 
   // /* Project p */
   // &-p {
-  //   @apply font-robotomono-normal text-sm sm:text-base md:text-lg;
+  //   @apply font-base font-normal text-sm sm:text-base md:text-lg;
   // }
 
   /* Project p */

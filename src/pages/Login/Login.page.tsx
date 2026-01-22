@@ -9,8 +9,8 @@ import { AxiosError } from 'axios';
 import cn from 'classnames';
 
 import * as authSlice from '../../slices/auth.slice';
-import { useReduxSelector, useReduxDispatch } from '../../store/hooks';
-import { selectFromStore } from '../../store/store';
+import { useReduxDispatch } from '../../store/hooks';
+import { useReduxAuthor } from '../../store/useReduxAuthor';
 
 import { authValidation } from '../../constants/formValidation';
 import { TyForm } from '../../types/Form.type';
@@ -24,7 +24,7 @@ function FuncComponent() {
   const location = useLocation();
   const {
     status: authStatus,
-  } = useReduxSelector(selectFromStore('author'));
+  } = useReduxAuthor();
   const dispatch = useReduxDispatch();
   const {
     register,
@@ -73,7 +73,7 @@ function FuncComponent() {
         <div
           className='flex items-center justify-center'
         >
-          <h2 className='text-2xl font-robotomono-bold font-bold text-white'>
+          <h2 className='text-2xl font-base font-bold font-bold text-white'>
             Log In
           </h2>
         </div>

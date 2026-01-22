@@ -2,9 +2,9 @@ import React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 
-import { useReduxDispatch, useReduxSelector } from '../../store/hooks';
+import { useReduxDispatch } from '../../store/hooks';
+import { useReduxTodos } from '../../store';
 import * as todosSlice from '../../slices/todos.slice';
-import { selectFromStore } from '../../store/store';
 
 import { TyTodo } from '../../types/Todo.type';
 import { TyTask } from '../../types/Task.type';
@@ -46,7 +46,7 @@ function FuncComponent() {
   const {
     items: todos,
     status: todosStatus,
-  } = useReduxSelector(selectFromStore('todos'));
+  } = useReduxTodos();
   const dispatch = useReduxDispatch();
   //#endregion RTK
 
@@ -183,7 +183,7 @@ function FuncComponent() {
   return (
     <div
       className="h-full
-      bg-gray-800 text-white font-robotomono-normal"
+      bg-gray-800 text-white font-base font-normal"
     // border border-red-500
     >
       <div

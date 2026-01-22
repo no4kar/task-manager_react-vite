@@ -7,23 +7,25 @@ import { AxiosError } from 'axios';
 import cn from 'classnames';
 
 import * as authSlice from '../../slices/auth.slice';
-import { useReduxDispatch, useReduxSelector } from '../../store/hooks';
+import { useReduxDispatch } from '../../store/hooks';
+import { useReduxAuthor } from '../../store/useReduxAuthor';
 
 import { authValidation } from '../../constants/formValidation';
 import { TyForm } from '../../types/Form.type';
 import { FormField } from '../../components/FormField';
 import { env } from '../../constants/varsFromEnv';
-import { selectFromStore } from '../../store/store';
 import { TyAuth } from '../../types/Auth.type';
 import { logger } from '../../utils/logger';
 
-export const SignupPage = React.memo(FuncComponent);
+export const SignupPage
+  = React.memo(FuncComponent);
 
 function FuncComponent() {
   const {
     status: authStatus,
-  } = useReduxSelector(selectFromStore('author'));
-  const dispatch = useReduxDispatch();
+  } = useReduxAuthor();
+  const dispatch
+    = useReduxDispatch();
   const {
     register,
     formState: { errors, isValid, isSubmitting },
@@ -40,7 +42,7 @@ function FuncComponent() {
           <div
             className='flex items-center justify-center flex-col gap-4'
           >
-            <h2 className='text-2xl font-robotomono-bold font-bold text-white'>
+            <h2 className='text-2xl font-base font-bold font-bold text-white'>
               Check your email
             </h2>
 
@@ -68,7 +70,7 @@ function FuncComponent() {
         <div
           className='flex items-center justify-center'
         >
-          <h2 className='text-2xl font-robotomono-bold font-bold text-white'>
+          <h2 className='text-2xl font-base font-bold font-bold text-white'>
             Sign Up
           </h2>
         </div>

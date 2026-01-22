@@ -6,8 +6,8 @@ import {
 
 import { TyAuth } from '../../types/Auth.type';
 
-import { useReduxSelector, useReduxDispatch } from '../../store/hooks';
-import { selectFromStore } from '../../store/store';
+import { useReduxDispatch } from '../../store/hooks';
+import { useReduxAuthor } from '../../store/useReduxAuthor';
 import * as authSlice from '../../slices/auth.slice';
 import { Loader } from '../../components/Loader';
 
@@ -17,7 +17,7 @@ function FuncComponent() {
   const {
     status: authStatus,
     errorMsg,
-  } = useReduxSelector(selectFromStore('author'));
+  } = useReduxAuthor();
   const {
     activationToken = 'unknown',
   } = useParams();
@@ -60,7 +60,7 @@ function FuncComponent() {
         <div
           className='flex items-center justify-center flex-col gap-4'
         >
-          <h2 className='text-2xl font-robotomono-bold font-bold text-white'>
+          <h2 className='text-2xl font-base font-bold font-bold text-white'>
             Account activation
           </h2>
 

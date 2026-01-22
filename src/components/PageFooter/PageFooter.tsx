@@ -1,6 +1,6 @@
 import React from 'react';
 import { FuncComponent } from
-  './PageHeaderAlex';
+  './PageFooterAlex';
 
-export const PageHeader
+export const PageFooter
   = React.memo(FuncComponent);

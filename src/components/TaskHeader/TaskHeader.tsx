@@ -6,8 +6,12 @@ import { TyEvt } from '../../types/Evt.type';
 import { TyTodo } from '../../types/Todo.type';
 import { TyTask } from '../../types/Task.type';
 
-import { useReduxDispatch, useReduxSelector } from '../../store/hooks';
-import { selectFromStore } from '../../store/store';
+import { useReduxDispatch } from '../../store/hooks';
+import {
+  useReduxAuthor,
+  useReduxTasks,
+  useReduxTodos
+} from '../../store';
 import { Loader } from '../Loader';
 import { DropdownReusable as Dropdown } from '../Dropdown';
 import * as tasksSlice from '../../slices/tasks.slice';
@@ -31,22 +35,23 @@ function FuncComponent({
   const titleInput
     = React.useRef<HTMLTextAreaElement>(null);
 
-  // Redux
+  //#region Redux
   const {
     items: todos,
     status: todosStatus,
-  } = useReduxSelector(selectFromStore('todos'));
+  } = useReduxTodos();
   const {
     author,
-  } = useReduxSelector(selectFromStore('author'));
+  } = useReduxAuthor();
   const {
     items: tasks,
     status: tasksStatus,
-  } = useReduxSelector(selectFromStore('tasks'));
+  } = useReduxTasks();
   const dispatch
     = useReduxDispatch();
+  //#endregion 
 
-  // RRD
+  //#region RRD
   const [
     searchParams,
     setSearchParams,
@@ -56,10 +61,13 @@ function FuncComponent({
       createSearchParamUpdater(setSearchParams),
       [setSearchParams],
     );
+  //#endregion 
+
   const selectedTaskId
     = searchParams.get(TyTask.SearchParams.ID);
   const selectedTask
-    = tasks.find(task => task.id === selectedTaskId) || null;
+    = tasks.find(task => task.id === selectedTaskId)
+    || null;
 
   const isTodosLoading
     = todosStatus === TyTodo.Status.LOADING;
@@ -172,7 +180,7 @@ function FuncComponent({
   return (
     <header className='todo__header space-y-2 sm:space-y-4'>
       <h1
-        className='font-robotomono-bold font-bold 
+        className='font-base font-bold font-bold 
         text-2xl sm:text-3xl text-center'
       >
         The {author?.email}'s tasks

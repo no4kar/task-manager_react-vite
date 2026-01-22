@@ -48,7 +48,7 @@ function FuncComponent<T extends Record<string, any>>({
   const {
     container = 'flex flex-col gap-2',
     label = {
-      container: 'font-robotomono-normal font-normal text-base',
+      container: 'font-base font-normal font-normal text-base',
       hasError: '',
       required: 'after:content-["*"] after:ml-1 after:text-system-error',
     },
@@ -58,7 +58,7 @@ function FuncComponent<T extends Record<string, any>>({
       hasError: 'text-system-error',
     },
     errorMsg = {
-      container: `font-robotomono-light font-light text-xs text-system-error 
+      container: `font-base font-light font-light text-xs text-system-error 
       overflow-hidden transition-all duration-500 ease-in-out`,
     },
   } = style;

@@ -2,9 +2,8 @@ import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import {
   useReduxDispatch,
-  useReduxSelector,
 } from '../../store/hooks';
-import { selectFromStore } from '../../store/store';
+import { useReduxAuthor } from '../../store/useReduxAuthor';
 import * as authSlice from '../../slices/auth.slice';
 import { Loader } from '../Loader';
 import { TyAuth } from '../../types/Auth.type';
@@ -13,19 +12,22 @@ export const RequireAuth
   = React.memo(FuncComponent);
 
 function FuncComponent() {
-  // RRD
-  const location = useLocation();
+  //#region RRD
+  const location
+    = useLocation();
+  //#endregion RRD
 
-  // Redux
+  //#region Redux
   const {
     author,
     status: authStatus,
-  } = useReduxSelector(selectFromStore('author'));
-  const dispatch = useReduxDispatch();
+  } = useReduxAuthor();
+  const dispatch
+    = useReduxDispatch();
+  //#endregion RRD
 
   React.useEffect(() => {
     if (!author) {
-      // check auth
       dispatch(authSlice.asyncThunk.refresh());
     }
   }, []);

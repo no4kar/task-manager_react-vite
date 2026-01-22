@@ -44,7 +44,7 @@ function FuncComponent({
       className={container}
     >
       <h1
-        className='font-robotomono-bold text-3xl font-bold text-center'
+        className='font-base font-bold text-3xl font-bold text-center'
       >
         {title}
       </h1>
