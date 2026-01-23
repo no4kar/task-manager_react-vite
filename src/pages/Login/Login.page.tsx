@@ -9,8 +9,8 @@ import { AxiosError } from 'axios';
 import cn from 'classnames';
 
 import * as authSlice from '../../slices/auth.slice';
-import { useReduxDispatch } from '../../store/hooks';
-import { useReduxAuthor } from '../../store/useReduxAuthor';
+import { useReduxDispatch } from '../../hooks';
+import { useReduxAuthor } from '../../hooks';
 
 import { authValidation } from '../../constants/formValidation';
 import { TyForm } from '../../types/Form.type';

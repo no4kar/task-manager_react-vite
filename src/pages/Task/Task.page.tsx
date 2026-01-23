@@ -2,8 +2,8 @@ import React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 
-import { useReduxDispatch } from '../../store/hooks';
-import { useReduxTodos } from '../../store';
+import { useReduxDispatch } from '../../hooks';
+import { useReduxTodos } from '../../hooks';
 import * as todosSlice from '../../slices/todos.slice';
 
 import { TyTodo } from '../../types/Todo.type';

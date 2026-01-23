@@ -6,8 +6,8 @@ import {
 
 import { TyAuth } from '../../types/Auth.type';
 
-import { useReduxDispatch } from '../../store/hooks';
-import { useReduxAuthor } from '../../store/useReduxAuthor';
+import { useReduxDispatch } from '../../hooks';
+import { useReduxAuthor } from '../../hooks';
 import * as authSlice from '../../slices/auth.slice';
 import { Loader } from '../../components/Loader';
 

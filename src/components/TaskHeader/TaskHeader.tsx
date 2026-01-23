@@ -6,12 +6,12 @@ import { TyEvt } from '../../types/Evt.type';
 import { TyTodo } from '../../types/Todo.type';
 import { TyTask } from '../../types/Task.type';
 
-import { useReduxDispatch } from '../../store/hooks';
 import {
+  useReduxDispatch,
   useReduxAuthor,
   useReduxTasks,
   useReduxTodos
-} from '../../store';
+} from '../../hooks';
 import { Loader } from '../Loader';
 import { DropdownReusable as Dropdown } from '../Dropdown';
 import * as tasksSlice from '../../slices/tasks.slice';

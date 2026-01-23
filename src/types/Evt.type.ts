@@ -23,4 +23,13 @@ export namespace TyEvt {
   export namespace Focus {
     export type InputElmt = React.FocusEvent<HTMLInputElement>;
   }
+
+  // Centralized custom event names
+  export const CustomEvent = {
+    TOGGLE_PAGE_ASIDE: "toggle-page-aside",
+    // Add more events here as needed
+  } as const;
+  
+  export type CustomEventName
+    = typeof CustomEvent[keyof typeof CustomEvent];
 }

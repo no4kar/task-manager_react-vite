@@ -1,25 +1,28 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-
-import { PageHeader } from './components/PageHeader';
-import { PageFooter } from './components/PageFooter';
-import { Notification } from './components/Notification';
+import cn from 'classnames';
 
 import './App.scss';
 import { TyAuth } from './types/Auth.type';
 import { TyTodo } from './types/Todo.type';
-import { useReduxAuthor } from './store/useReduxAuthor';
-import { useReduxTodos } from './store/useReduxTodos';
+import { useCustomEvent, useReduxAuthor, useReduxTodos } from './hooks';
+
 import { PageAside } from './components/PageAside';
+import { PageHeader } from './components/PageHeader';
+import { PageFooter } from './components/PageFooter';
+import { Notification } from './components/Notification';
+import { TyEvt } from './types/Evt.type';
 
 export const App
-  // = MockUpFuncComponent;
   = FuncComponent; // dont needs the React.memo. it will be rerendering each time
 
 function FuncComponent() {
   const [messages, setMessages]
     = React.useState<{ date: number, content: string }[]>([]);
+  const [isAsideOpen, setAsideOpen]
+    = React.useState(false);
 
+  //#region Redux
   const {
     errorMsg: authErrorMsg,
     status: authStatus,
@@ -28,7 +31,12 @@ function FuncComponent() {
     errorMsg: todosErrorMsg,
     status: todosStatus,
   } = useReduxTodos();
+  //#endregion
 
+  const toggleAside
+    = () => setAsideOpen(v => !v);
+
+  //#region useEffect
   React.useEffect(() => {
     if (authStatus === TyAuth.Status.ERROR) {
       const newMsg = {
@@ -50,6 +58,11 @@ function FuncComponent() {
       setMessages(prev => [...prev, newMsg]);
     }
   }, [todosStatus]);
+  //#endregion
+
+  useCustomEvent(TyEvt.CustomEvent.TOGGLE_PAGE_ASIDE, () => {
+    toggleAside();
+  });
 
   return (
     <div
@@ -63,17 +76,29 @@ function FuncComponent() {
 
       <main data-ui="page-main"
         className="project-page-container 
-      w-full py-4 sm:py-6 md:py-10
-        flex flex-1 overflow-hidden"
+        w-full py-4 sm:py-6 md:py-10
+        flex gap-6 flex-1 overflow-hidden"
       >
-        <PageAside />
+        <div className="relative md:static">
+          <div
+            className={cn(`absolute md:static
+            transform transition-transform duration-300 ease-in-out
+            z-[1]`, {
+              "translate-x-0": isAsideOpen,
+              "-translate-x-[150%]": !isAsideOpen,
+            }, "md:translate-x-0")
+            }
+          >
+            <PageAside />
+          </div>
+        </div>
 
         {/* Content shell */}
         <section className="flex-1 min-w-0 overflow-hidden">
           {/* Scroll container */}
           <div className="h-full overflow-y-auto custom-scrollbar">
             {/* Content padding layer */}
-            <div className="pl-6 py-10">
+            <div className="py-10">
               <Outlet />
             </div>
           </div>

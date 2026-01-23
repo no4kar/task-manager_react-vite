@@ -1,3 +1,4 @@
+import { TyEvt } from "../types/Evt.type";
 
 /**
  * Returns a promise that resolves after a specified delay.
@@ -67,4 +68,8 @@ export function base64ToBlob(base64: string): Blob {
   }
 
   return new Blob([array], { type: mime });
+}
+
+export function dispatchCustomEvent(eventName: TyEvt.CustomEventName) {
+  window.dispatchEvent(new Event(eventName));
 }

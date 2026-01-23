@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import {
   useReduxDispatch,
-} from '../../store/hooks';
-import { useReduxAuthor } from '../../store/useReduxAuthor';
+} from '../../hooks';
+import { useReduxAuthor } from '../../hooks';
 import * as authSlice from '../../slices/auth.slice';
 import { Loader } from '../Loader';
 import { TyAuth } from '../../types/Auth.type';

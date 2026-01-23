@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom';
-import { useReduxAuthor } from '../../store/useReduxAuthor';
+import { useReduxAuthor } from '../../hooks';
 
 import { UserMenu } from '../UserMenu';
+import { TyEvt } from '../../types/Evt.type';
+import { dispatchCustomEvent } from '../../utils';
 
-export function FuncComponent() {
+export function FuncComponent({
+  toggleAside = () => { },
+}: {
+  toggleAside?: (() => void) | undefined;
+}) {
   const {
     author,
   } = useReduxAuthor();
@@ -34,7 +40,11 @@ export function FuncComponent() {
             </div>
 
             <button data-ui="page-header-aside-show"
-              className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-card-dark text-slate-500 transition-colors">
+              className="p-2 md:hidden 
+              rounded-xl hover:bg-slate-100 dark:hover:bg-card-dark 
+              text-slate-500 transition-colors"
+              onClick={() => dispatchCustomEvent(TyEvt.CustomEvent.TOGGLE_PAGE_ASIDE)}
+            >
               <i className="fa-solid fa-bars" />
             </button>
           </div>

@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useReduxDispatch } from '../../store/hooks';
-import { useReduxAuthor } from '../../store/useReduxAuthor';
+import { useReduxDispatch, useReduxAuthor } from '../../hooks';
 import * as authSlice from '../../slices/auth.slice';
 import * as tasksSlice from '../../slices/tasks.slice';
 import * as todosSlice from '../../slices/todos.slice';
