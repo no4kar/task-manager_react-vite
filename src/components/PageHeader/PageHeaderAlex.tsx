@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useReduxAuthor } from '../../store/useReduxAuthor';
 
+import { UserMenu } from '../UserMenu';
+
 export function FuncComponent() {
   const {
     author,
@@ -14,7 +16,7 @@ export function FuncComponent() {
     >
       <div
         className="flex items-center justify-between
-        rounded-lg overflow-hidden"
+        rounded-lg"
       >
         <div className="flex items-center gap-6 flex-1">
           <div className="flex items-center gap-4 shrink-0">
@@ -77,17 +79,19 @@ export function FuncComponent() {
           <div className="h-8 w-[1px] bg-slate-200 dark:bg-border-dark mx-2" />
 
           <div className="flex items-center gap-3 pl-2">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm text-primary font-bold leading-none">
-                {author?.email}
-              </p>
-              <p className="text-xs uppercase tracking-tight">User</p>
-            </div>
-            <div
-              data-alt="Profile photo of the user"
-              className="w-10 h-10 rounded-full bg-cover bg-center border-2 border-primary/20
-          bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuCX-lgtqM9_HEqVO5mnAX9Om001TblQPKKPafsGA6IeN1kNgQqB0sXNqA3c3pDXFrapKlhu7eubjrKR4GhJ1KFpkCCLy6_HOjs3oZtI4JbGAGoZVY_EgtvszxL8R5fj1-_BKMcUN-8O9-LoHbKgtemkpg9i7vOPr8VgSSGpXIrtG245RdIfqQzmytvAXl9rR2d_4esdAbHyZPjZnQEsbizclfLRfwiQ_KqMXxCCnApxq8R84dmWregK_hRrcoHjiPExz8JnCXMTHMw')]"
-            />
+            {author && (
+              <div className="text-right hidden sm:block">
+                <p className="text-sm text-primary font-bold leading-none">
+                  {author.email}
+                </p>
+
+                <p className="text-xs uppercase tracking-tight">
+                  User
+                </p>
+              </div>
+            )}
+
+            <UserMenu />
           </div>
         </div>
       </div>

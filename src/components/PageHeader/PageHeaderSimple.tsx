@@ -10,8 +10,10 @@ export function FuncComponent() {
     author,
     // status: authorStatus,
   } = useReduxAuthor();
-  const dispatch = useReduxDispatch();
-  const navigate = useNavigate();
+  const dispatch
+    = useReduxDispatch();
+  const navigate
+    = useNavigate();
 
   return (
     <header
