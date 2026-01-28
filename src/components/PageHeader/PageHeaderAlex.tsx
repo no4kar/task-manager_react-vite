@@ -5,11 +5,7 @@ import { UserMenu } from '../UserMenu';
 import { TyEvt } from '../../types/Evt.type';
 import { dispatchCustomEvent } from '../../utils';
 
-export function FuncComponent({
-  toggleAside = () => { },
-}: {
-  toggleAside?: (() => void) | undefined;
-}) {
+export function FuncComponent() {
   const {
     author,
   } = useReduxAuthor();
@@ -17,7 +13,8 @@ export function FuncComponent({
   return (
     <header
       data-ui="page-header"
-      className="project-page-container 
+      className="project-page-container
+      sticky top-0 z-10
       w-full py-4 sm:py-6 md:py-10"
     >
       <div

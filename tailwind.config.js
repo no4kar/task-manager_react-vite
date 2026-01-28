@@ -33,15 +33,23 @@ export default {
         },
 
         system: {
-          'success': '#16a34a',
-          'warn': '#eab308',
-          'error': '#ef4444',
+          success: '#16a34a',
+          warn: '#eab308',
+          error: '#ef4444',
         },
       },
 
       textColor: {
-        primary: '#0f172a',
-        secondary: '#64748b',
+        primary: {
+          DEFAULT: '#0f172a',
+          dark: '#ffffff',
+        },
+        // primary: '#0f172a',
+        secondary: {
+          DEFAULT: '#64748b',
+          dark: '#ffffff',
+        },
+        // secondary: '#64748b',
         inverted: '#ffffff',
       },
 

@@ -5,7 +5,11 @@ import cn from 'classnames';
 import './App.scss';
 import { TyAuth } from './types/Auth.type';
 import { TyTodo } from './types/Todo.type';
-import { useCustomEvent, useReduxAuthor, useReduxTodos } from './hooks';
+import {
+  useCustomEvent,
+  useReduxAuthor,
+  useReduxTodos,
+} from './hooks';
 
 import { PageAside } from './components/PageAside';
 import { PageHeader } from './components/PageHeader';

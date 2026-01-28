@@ -6,7 +6,7 @@ import { App } from './App';
 import { RequireAuth } from './components/RequireAuth';
 import { NotFoundPage } from './pages/NotFound';
 import { LoginPage } from './pages/Login';
-import { TaskPage } from './pages/Task';
+import { FuncComponent as TaskPage } from './pages/Task/TaskAlex.page';
 import { SignupPage } from './pages/Signup';
 import { ActivationPage } from './pages/Activation';
 import { HomePage } from './pages/Home';
@@ -22,7 +22,16 @@ const router = createBrowserRouter([
       {
         path: '/', element: <RequireAuth />,
         children: [
-          { path: 'tasks', element: <TaskPage />, },
+          {
+            path: 'tasks',
+            element: <TaskPage />,
+            // children: [
+            //   {
+            //     path: ':taskId',
+            //     element: <NotFoundPage />
+            //   }
+            // ],
+          },
         ],
       },
       {
